@@ -1,4 +1,4 @@
-<<<<<<< HEAD
+
 # Project Folder Template
 
 嵌入式工程目录结构模板
@@ -38,28 +38,45 @@
 ....
 ```
 
-
-
-- 使用`git bash`删除每个目录下的`.gitkeep`文件
+- 使用 `git bash`删除每个目录下的 `.gitkeep`文件
 
 ```bash
 find . -type d -not -path "*/.git*" -exec rm -f {}/.gitkeep \;
 
 ```
 
-- 为空文件夹增加`.gitkeep`文件
+- 为空文件夹增加 `.gitkeep`文件
 
 ```bash
 find ./ -type d -empty -not -path "./.git/*" -exec touch {}/.gitkeep \;
 ```
 
-
-
 参考
 
 - [搞嵌入式，文件很多很乱？当始一个新的嵌入式项目，必做的准备工作--工程文件夹归档](https://www.bilibili.com/video/BV1E1421i7wJ/)
 
-=======
+
 # Miner_Helmet
+
 Graduation project
+
 >>>>>>> 98775b565307c4fb8832f1c323ea3e0308d5643d
+>>>>>>>
+>>>>>>>
+>>>>>>
+>>>>>
+>>>>
+>>>
+>>
+
+# Miner_Helmet
+
+Graduation project
+
+>>>>>>> 98775b565307c4fb8832f1c323ea3e0308d5643d
+>>>>>>>
+>>>>>>
+>>>>>
+>>>>
+>>>
+>>
