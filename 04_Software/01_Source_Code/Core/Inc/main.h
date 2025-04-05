@@ -32,6 +32,7 @@ extern "C" {
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
 #include "stdio.h"
+#include "delay.h"
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -53,12 +54,14 @@ extern "C" {
 void Error_Handler(void);
 
 /* USER CODE BEGIN EFP */
-
+void delay_us(uint32_t Delay);
 /* USER CODE END EFP */
 
 /* Private defines -----------------------------------------------------------*/
 #define Buzzer_Pin GPIO_PIN_12
 #define Buzzer_GPIO_Port GPIOB
+#define DHT11_Pin GPIO_PIN_11
+#define DHT11_GPIO_Port GPIOA
 
 /* USER CODE BEGIN Private defines */
 

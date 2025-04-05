@@ -23,28 +23,36 @@
 /* USER CODE BEGIN 0 */
 #include "stdio.h"
 
-#ifdef __GNUC__
-/* With GCC, small printf (option LD Linker->Libraries->Small printf
-   set to 'Yes') calls __io_putchar() */
-#define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
-#else
-#define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
-#endif /* __GNUC__ */
-
-/**
-  * @brief  Retargets the C library printf function to the USART.
-  * @param  None
-  * @retval None
-  */
-PUTCHAR_PROTOTYPE
+int fputc(int ch, FILE *f)
 {
-  /* Place your implementation of fputc here */
-  /* e.g. write a character to the USART3 and Loop until the end of transmission */
-  HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, 0xFFFF);
-	//SEGGER_RTT_PutChar(0, ch);
-
-  return ch;
+	while((USART1->SR&0X40)==0); //Wait for the last serial data transmission to complete
+	USART1->DR = (uint8_t) ch;   //Write DR, serial port 1 will send data
+  
+	return ch;
 }
+
+// #ifdef __GNUC__
+// /* With GCC, small printf (option LD Linker->Libraries->Small printf
+//    set to 'Yes') calls __io_putchar() */
+// #define PUTCHAR_PROTOTYPE int __io_putchar(int ch)
+// #else
+// #define PUTCHAR_PROTOTYPE int fputc(int ch, FILE *f)
+// #endif /* __GNUC__ */
+
+// /**
+//   * @brief  Retargets the C library printf function to the USART.
+//   * @param  None
+//   * @retval None
+//   */
+// PUTCHAR_PROTOTYPE
+// {
+//   /* Place your implementation of fputc here */
+//   /* e.g. write a character to the USART3 and Loop until the end of transmission */
+//   HAL_UART_Transmit(&huart1, (uint8_t *)&ch, 1, 0xFFFF);
+// 	//SEGGER_RTT_PutChar(0, ch);
+
+//   return ch;
+// }
 /* USER CODE END 0 */
 
 UART_HandleTypeDef huart1;
