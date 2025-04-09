@@ -1,0 +1,879 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>矿工安全管理后台</title>
+  <!-- Import Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500&display=swap" rel="stylesheet" />
+  <!-- Import MQTT.js library -->
+  <script src="https://unpkg.com/mqtt/dist/mqtt.min.js"></script>
+  
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+    html, body {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      font-family: 'Roboto', sans-serif;
+      background: #f0f2f5;
+      overflow: hidden;
+    }
+    
+    /* Login Page Styles */
+    .login-container {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background-color: #34495e;
+    }
+    
+    .login-box {
+      background: white;
+      padding: 30px;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+      width: 320px;
+    }
+    
+    .login-box h2 {
+      margin-bottom: 20px;
+      text-align: center;
+      color: #333;
+    }
+    
+    .login-box input {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-size: 16px;
+    }
+    
+    .login-box button {
+      width: 100%;
+      padding: 12px;
+      background-color: #3498db;
+      color: white;
+      border: none;
+      border-radius: 4px;
+      font-size: 16px;
+      cursor: pointer;
+      margin-top: 20px;
+    }
+    
+    .login-box button:hover {
+      background-color: #2980b9;
+    }
+    
+    /* Main application container - hidden until login */
+    .app-container {
+      display: none;
+      width: 100%;
+      height: 100%;
+    }
+    
+    /* Top connection status bar */
+    .status-bar {
+      width: 100%;
+      background: #5bc0de;
+      color: #fff;
+      padding: 15px 0;
+      text-align: center;
+      font-size: 20px;
+      font-weight: 500;
+    }
+    
+    /* Navigation styles */
+    .nav-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      background: #2c3e50;
+      padding: 5px 0;
+      border-bottom: 1px solid #1a2530;
+    }
+    
+    /* Mobile selector */
+    .page-selector {
+      width: 95%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      margin: 5px 0;
+      background-color: #fff;
+      display: none;
+    }
+    
+    /* Tab navigation for desktop */
+    .tab-nav {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+    }
+    
+    .tab-btn {
+      padding: 15px 25px;
+      background: #34495e;
+      color: #ecf0f1;
+      border: none;
+      border-bottom: 3px solid transparent;
+      margin: 0;
+      font-size: 18px;
+      cursor: pointer;
+      transition: all 0.3s;
+      min-width: 120px;
+      text-align: center;
+    }
+    
+    .tab-btn:hover {
+      background: #3d566e;
+    }
+    
+    .tab-btn.active {
+      border-bottom: 3px solid #e74c3c;
+      background: #2c3e50;
+      font-weight: 500;
+    }
+    
+    /* Main container for all pages */
+    .pages-container {
+      height: calc(100% - 110px); /* Adjust based on header heights */
+      width: 100%;
+      overflow: hidden;
+      position: relative;
+    }
+    
+    /* Each page panel */
+    .page {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      top: 0;
+      left: 0;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.3s;
+      overflow-y: auto;
+      padding: 8px;
+    }
+    
+    .page.active {
+      opacity: 1;
+      pointer-events: all;
+    }
+    
+    /* Panel styling */
+    .panel {
+      background: #fff;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+    
+    .panel h2 {
+      text-align: center;
+      margin-bottom: 20px;
+      font-size: 24px;
+      color: #444;
+    }
+    
+    .input-group {
+      margin-bottom: 15px;
+    }
+    
+    label {
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 8px;
+      display: block;
+    }
+    
+    input[type="text"],
+    textarea {
+      width: 100%;
+      padding: 12px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      outline: none;
+      transition: border-color 0.3s;
+    }
+    
+    input[type="text"]:focus,
+    textarea:focus {
+      border-color: #5bc0de;
+    }
+    
+    button {
+      margin-top: 10px;
+      padding: 12px;
+      font-size: 18px;
+      background-color: #5bc0de;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s;
+    }
+    
+    button:hover {
+      background-color: #46b8da;
+    }
+    
+    /* Subscription specific styles */
+    .sub-controls {
+      margin-bottom: 15px;
+    }
+    
+    .current-topic {
+      font-style: italic;
+      font-size: 16px;
+      text-align: center;
+      color: #555;
+      margin-top: 10px;
+    }
+    
+    .messages-container {
+      position: relative;
+      margin-top: 15px;
+      display: flex;
+      flex-direction: column;
+    }
+    
+    .messages {
+      background-color: #ffffff;
+      border-radius: 4px;
+      padding: 15px;
+      font-size: 16px;
+      line-height: 1.5;
+      border: 1px solid #e0e0e0;
+      overflow-y: auto;
+      height: 300px;
+    }
+    
+    .clear-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      padding: 5px 10px;
+      font-size: 14px;
+      background-color: #5bc0de;
+      color: #fff;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      opacity: 0.8;
+      transition: opacity 0.3s, transform 0.3s;
+      z-index: 10;
+    }
+    
+    .clear-btn:hover {
+      opacity: 1;
+      transform: scale(1.1);
+    }
+    
+    .message {
+      display: flex;
+      margin-bottom: 15px;
+    }
+    
+    .left-bar {
+      width: 4px;
+      background-color: #00ff00;
+      margin-right: 10px;
+      border-radius: 2px;
+    }
+    
+    .content {
+      background-color: #ffffff;
+      border-radius: 8px;
+      padding: 10px;
+      color: #333;
+      flex: 1;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .topic-qos {
+      font-size: 14px;
+      margin-bottom: 4px;
+      color: #888;
+    }
+    
+    .text {
+      font-size: 16px;
+      margin-bottom: 8px;
+      word-wrap: break-word;
+    }
+    
+    .timestamp {
+      font-size: 12px;
+      text-align: right;
+      color: #888;
+    }
+    
+    /* Monitor page specific styles */
+    .data-container {
+      padding: 10px;
+      max-width: 900px;
+      margin: 0 auto;
+    }
+    
+    .data-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      grid-template-rows: repeat(2, auto);
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    
+    .data-item {
+      background: #f9f9f9;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+      min-height: 80px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    
+    .data-item p {
+      margin: 0;
+      font-size: 16px;
+      color: #333;
+      text-align: center;
+    }
+    
+    .data-item span {
+      font-weight: bold;
+      color: #555;
+      font-size: 18px;
+      margin-top: 5px;
+      display: block;
+      text-align: center;
+    }
+    
+    .control-container {
+      padding: 10px;
+      max-width: 900px;
+      margin: 0 auto 10px; /* Reduced bottom margin */
+    }
+    
+    .control-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 20px;
+    }
+    
+    .control-item {
+      background: #f9f9f9;
+      border-radius: 8px;
+      padding: 15px;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+    }
+    
+    .light-controls {
+      display: flex;
+      gap: 10px;
+      margin-top: 5px;
+    }
+    
+    .light-btn {
+      flex: 1;
+      padding: 8px 0;
+      font-size: 16px;
+    }
+    
+    .light-btn.on {
+      background-color: #5cb85c;
+    }
+    
+    .light-btn.off {
+      background-color: #d9534f;
+    }
+    
+    .threshold-input {
+      width: 100%;
+      max-width: 120px;
+      margin-right: 10px;
+    }
+    
+    .threshold-container {
+      margin-top: 10px;
+    }
+    
+    /* Publish textarea styling */
+    .pub-container {
+      position: relative;
+      margin-top: 15px;
+      height: 300px;
+    }
+    
+    #pubMessage {
+      height: 100%;
+      resize: none;
+    }
+    
+    /* Responsive styles */
+    @media (max-width: 900px) {
+      .data-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+      
+      .control-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+    
+    @media (max-width: 768px) {
+      .page-selector {
+        display: block;
+      }
+      
+      .tab-nav {
+        display: none;
+      }
+      
+      .panel {
+        padding: 15px;
+      }
+      
+      .data-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Login Page -->
+  <div class="login-container" id="loginPage">
+    <div class="login-box">
+      <h2>Login to Miner Safety Management Backend</h2>
+      <div class="input-group">
+        <label for="username">Username</label>
+        <input type="text" id="username" placeholder="Enter username" />
+      </div>
+      <div class="input-group">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Enter password" />
+      </div>
+      <button onclick="attemptLogin()">Login</button>
+    </div>
+  </div>
+
+  <!-- Main Application (initially hidden) -->
+  <div class="app-container" id="appContainer">
+    <!-- Top connection status bar -->
+    <div class="status-bar" id="status">连接状态：未连接</div>
+
+    <!-- Navigation -->
+    <div class="nav-container">
+      <!-- Mobile dropdown selector -->
+      <select class="page-selector" id="pageSelector" onchange="changePage(this.value)">
+        <option value="monitor">后台管理</option>
+        <option value="subscribe">消息订阅</option>
+        <option value="publish">消息发布</option>
+      </select>
+      
+      <!-- Desktop tab navigation -->
+      <div class="tab-nav">
+        <button class="tab-btn active" onclick="changePage('monitor')">后台管理</button>
+        <button class="tab-btn" onclick="changePage('subscribe')">消息订阅</button>
+        <button class="tab-btn" onclick="changePage('publish')">消息发布</button>
+      </div>
+    </div>
+
+    <!-- Main container for all page content -->
+    <div class="pages-container">
+      <!-- Monitor Page -->
+      <div class="page active" id="monitorPage">
+        <div class="panel">
+          <h2>实时数据监视</h2>
+          <div class="data-container">
+            <div class="data-grid">
+              <div class="data-item">
+                <p>温度</p>
+                <span id="tempValue">N/A</span>
+              </div>
+              <div class="data-item">
+                <p>湿度</p>
+                <span id="humidityValue">N/A</span>
+              </div>
+              <div class="data-item">
+                <p>烟雾值</p>
+                <span id="smokeValue">N/A</span>
+              </div>
+              <div class="data-item">
+                <p>地理位置</p>
+                <span id="locationValue">N/A</span>
+              </div>
+              <div class="data-item">
+                <p>照明状态</p>
+                <span id="lightStatusValue">N/A</span>
+              </div>
+              <div class="data-item">
+                <p>是否有危险</p>
+                <span id="dangerValue">N/A</span>
+              </div>
+            </div>
+          </div>
+        </div>
+        
+        <div class="panel">
+          <h2>控制面板</h2>
+          <div class="control-container">
+            <div class="control-grid">
+              <div class="control-item">
+                <label>照明控制:</label>
+                <div class="light-controls">
+                  <button class="light-btn on" onclick="setLight('on')">开启</button>
+                  <button class="light-btn off" onclick="setLight('off')">关闭</button>
+                </div>
+              </div>
+              <div class="control-item">
+                <label>阈值设置:</label>
+                <div class="threshold-container">
+                  <div class="input-group">
+                    <label for="tempThreshold">温度阈值:</label>
+                    <input type="text" id="tempThreshold" class="threshold-input" placeholder="温度值" />
+                  </div>
+                  <div class="input-group">
+                    <label for="humidityThreshold">湿度阈值:</label>
+                    <input type="text" id="humidityThreshold" class="threshold-input" placeholder="湿度值" />
+                  </div>
+                  <button onclick="sendThresholds()">设置阈值</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Subscribe Page -->
+      <div class="page" id="subscribePage">
+        <div class="panel">
+          <h2>订阅消息</h2>
+          <div class="sub-controls">
+            <div class="input-group">
+              <label for="subTopic">订阅 Topic:</label>
+              <input type="text" id="subTopic" placeholder="请输入订阅的主题" />
+              <button onclick="subscribeTopic()">订阅</button>
+            </div>
+            <div class="current-topic" id="currentSubTopic">当前订阅：无</div>
+          </div>
+          <h3 style="text-align:center; margin-top: 20px;">已接收的消息</h3>
+          <div class="messages-container">
+            <div class="messages" id="subMessages"></div>
+            <button id="clearSubBtn" class="clear-btn" onclick="clearMessages()">清空接收区</button>
+          </div>
+        </div>
+      </div>
+      
+      <!-- Publish Page -->
+      <div class="page" id="publishPage">
+        <div class="panel">
+          <h2>发布消息</h2>
+          <div class="input-group">
+            <label for="pubTopic">发布 Topic:</label>
+            <input type="text" id="pubTopic" placeholder="请输入发布的主题" />
+          </div>
+          <h3 style="text-align:center; margin-top: 20px;">消息内容</h3>
+          <div class="messages-container">
+            <div class="pub-container">
+              <textarea id="pubMessage" placeholder="请输入消息内容"></textarea>
+              <button id="clearPubBtn" class="clear-btn" onclick="clearPubMessage()">清空发送区</button>
+            </div>
+          </div>
+          <button onclick="sendMessage()">发送消息</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    let client;
+    let currentSubTopic = '';
+    let currentPage = 'monitor';
+
+    // Login function
+    function attemptLogin() {
+      const username = document.getElementById('username').value;
+      const password = document.getElementById('password').value;
+      
+      // Check credentials
+      if (username === 'chan' && password === 'chan') {
+        // Hide login page and show app
+        document.getElementById('loginPage').style.display = 'none';
+        document.getElementById('appContainer').style.display = 'block';
+        
+        // Connect to MQTT after successful login
+        connectMQTT();
+      } else {
+        alert('Invalid username or password');
+      }
+    }
+
+    // DOM Elements for status, subscription & publishing panels
+    const statusDiv = document.getElementById('status');
+    const subTopicInput = document.getElementById('subTopic');
+    const currentSubTopicDiv = document.getElementById('currentSubTopic');
+    const subMessagesDiv = document.getElementById('subMessages');
+    const pubTopicInput = document.getElementById('pubTopic');
+    const pubMessageInput = document.getElementById('pubMessage');
+
+    // DOM Elements for monitoring module (real-time data)
+    const tempValue = document.getElementById('tempValue');
+    const humidityValue = document.getElementById('humidityValue');
+    const smokeValue = document.getElementById('smokeValue');
+    const locationValue = document.getElementById('locationValue');
+    const lightStatusValue = document.getElementById('lightStatusValue');
+    const dangerValue = document.getElementById('dangerValue');
+
+    // Navigation elements
+    const pageSelector = document.getElementById('pageSelector');
+    const tabButtons = document.querySelectorAll('.tab-btn');
+
+    // Pre-defined topics for standardization
+    const STATUS_TOPIC = 'helmet/status';
+    const CMD_TOPIC = 'helmet/cmd';
+
+    // Function to change current page
+    function changePage(pageName) {
+      // Update current page
+      currentPage = pageName;
+      
+      // Update UI elements
+      document.querySelectorAll('.page').forEach(page => {
+        page.classList.remove('active');
+      });
+      document.getElementById(pageName + 'Page').classList.add('active');
+      
+      // Update tab buttons
+      tabButtons.forEach(btn => {
+        btn.classList.remove('active');
+      });
+      
+      // Find and activate the correct tab
+      tabButtons.forEach(btn => {
+        if (btn.innerText.includes(getPageDisplayName(pageName))) {
+          btn.classList.add('active');
+        }
+      });
+      
+      // Update dropdown
+      pageSelector.value = pageName;
+    }
+    
+    // Helper to get display name for page
+    function getPageDisplayName(pageName) {
+      switch(pageName) {
+        case 'monitor': return '后台管理';
+        case 'subscribe': return '消息订阅';
+        case 'publish': return '消息发布';
+        default: return '';
+      }
+    }
+
+    // Establish MQTT connection
+    function connectMQTT() {
+      client = mqtt.connect('ws://broker.emqx.io:8083/mqtt');
+
+      client.on('connect', () => {
+        statusDiv.innerText = '连接状态：已连接到 MQTT Broker';
+        
+        // Auto-subscribe to helmet status topic for monitoring updates
+        client.subscribe(STATUS_TOPIC, (err) => {
+          if (!err) {
+            console.log(`自动订阅设备状态主题: ${STATUS_TOPIC}`);
+          }
+        });
+      });
+
+      client.on('message', (topic, message) => {
+        // Display all received messages in the subscription panel if it's the currently subscribed topic
+        if (topic === currentSubTopic) {
+          appendReceivedMessage(topic, message);
+        }
+        
+        // If message is from the status topic, update monitoring data
+        if (topic === STATUS_TOPIC) {
+          try {
+            const data = JSON.parse(message.toString());
+            updateMonitoringData(data);
+          } catch (e) {
+            console.log('解析状态数据出错:', e);
+          }
+        }
+      });
+
+      client.on('error', (error) => {
+        statusDiv.innerText = '连接状态：错误 - ' + error;
+        console.error('MQTT 错误:', error);
+      });
+    }
+    
+    // Update monitoring panel with data from received status message
+    function updateMonitoringData(data) {
+      if (data.temperature !== undefined) {
+        tempValue.textContent = data.temperature;
+      }
+      if (data.humidity !== undefined) {
+        humidityValue.textContent = data.humidity;
+      }
+      if (data.smoke !== undefined) {
+        smokeValue.textContent = data.smoke;
+      }
+      if (data.location && data.location.lat !== undefined && data.location.lng !== undefined) {
+        locationValue.textContent = `Lat: ${data.location.lat}, Lng: ${data.location.lng}`;
+      }
+      if (data.light !== undefined) {
+        lightStatusValue.textContent = data.light === 'on' ? '开启' : '关闭';
+      }
+      if (data.danger !== undefined) {
+        dangerValue.textContent = data.danger ? '是' : '否';
+      }
+    }
+
+    // Append received messages to subscription panel
+    function appendReceivedMessage(topic, message) {
+      const msgContainer = document.createElement('div');
+      msgContainer.className = 'message';
+
+      const leftBar = document.createElement('div');
+      leftBar.className = 'left-bar';
+
+      const content = document.createElement('div');
+      content.className = 'content';
+
+      const topicQos = document.createElement('div');
+      topicQos.className = 'topic-qos';
+      topicQos.innerText = `Topic: ${topic}   QoS: 0`;
+
+      const textDiv = document.createElement('div');
+      textDiv.className = 'text';
+      textDiv.innerText = message.toString();
+
+      const timestampDiv = document.createElement('div');
+      timestampDiv.className = 'timestamp';
+      const now = new Date();
+      const dateStr = now.toLocaleString('zh-CN', { hour12: false });
+      const ms = now.getMilliseconds().toString().padStart(3, '0');
+      timestampDiv.innerText = `${dateStr}.${ms}`;
+
+      content.appendChild(topicQos);
+      content.appendChild(textDiv);
+      content.appendChild(timestampDiv);
+      msgContainer.appendChild(leftBar);
+      msgContainer.appendChild(content);
+      subMessagesDiv.appendChild(msgContainer);
+      subMessagesDiv.scrollTop = subMessagesDiv.scrollHeight;
+    }
+
+    // Subscribe to a topic
+    function subscribeTopic() {
+      const topic = subTopicInput.value.trim();
+      if (!topic) {
+        alert('请输入有效的订阅 Topic');
+        return;
+      }
+      if (currentSubTopic && currentSubTopic !== topic) {
+        client.unsubscribe(currentSubTopic, () => {
+          console.log(`取消旧订阅：${currentSubTopic}`);
+        });
+      }
+      currentSubTopic = topic;
+      currentSubTopicDiv.innerText = `当前订阅：${currentSubTopic}`;
+      client.subscribe(currentSubTopic, (err) => {
+        if (err) {
+          console.error('订阅错误:', err);
+          alert('订阅失败，请检查控制台信息');
+        } else {
+          console.log(`成功订阅：${currentSubTopic}`);
+        }
+      });
+    }
+
+    // Publish a message
+    function sendMessage() {
+      const topic = pubTopicInput.value.trim();
+      const msg = pubMessageInput.value.trim();
+      if (!topic) {
+        alert('请输入有效的发布 Topic');
+        return;
+      }
+      if (!msg) {
+        alert('请输入消息内容');
+        return;
+      }
+      client.publish(topic, msg, (err) => {
+        if (err) {
+          console.error('发送消息错误:', err);
+          alert('消息发送失败，请检查控制台信息');
+        } else {
+          console.log(`已发送到 ${topic}: ${msg}`);
+        }
+      });
+    }
+
+    // Clear subscription messages
+    function clearMessages() {
+      subMessagesDiv.innerHTML = '';
+    }
+    
+    // Clear publish message textarea
+    function clearPubMessage() {
+      pubMessageInput.value = '';
+    }
+
+    // Set light state: on or off
+    function setLight(state) {
+      const cmdObj = {
+        cmd: 'light',
+        value: state
+      };
+      client.publish(CMD_TOPIC, JSON.stringify(cmdObj), (err) => {
+        if (err) {
+          console.error('发送灯光控制命令错误:', err);
+          alert('灯光控制命令发送失败，请检查控制台信息');
+        } else {
+          console.log(`灯光${state === 'on' ? '开启' : '关闭'}命令已发送:`, cmdObj);
+        }
+      });
+    }
+
+    // Send threshold values for temperature and humidity
+    function sendThresholds() {
+      const tempTh = document.getElementById('tempThreshold').value.trim();
+      const humTh = document.getElementById('humidityThreshold').value.trim();
+      if (!tempTh || !humTh) {
+        alert('请输入温度和湿度阈值');
+        return;
+      }
+      const thresholdsObj = {
+        cmd: 'thresholds',
+        temp: parseFloat(tempTh),
+        humidity: parseFloat(humTh)
+      };
+      client.publish(CMD_TOPIC, JSON.stringify(thresholdsObj), (err) => {
+        if (err) {
+          console.error('发送阈值设置错误:', err);
+          alert('阈值设置消息发送失败，请检查控制台信息');
+        } else {
+          console.log('阈值设置消息已发送:', thresholdsObj);
+        }
+      });
+    }
+  </script>
+</body>
+</html>
