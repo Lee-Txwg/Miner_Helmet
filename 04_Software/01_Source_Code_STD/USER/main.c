@@ -11,7 +11,7 @@ float smoke_ppm;
 // Global threshold variables with default values
 volatile u8    temperatureThreshold = 30; // Default: 30°C
 volatile u8    humidityThreshold = 80;    // Default: 80%
-volatile float smokeThreshold = 50;       // Default: 50 (example value)
+volatile float smokeThreshold = 1000;       // Default: 50 (example value)
 
 // The light threshold remains unchanged
 const float lightThreshold = 1000.0;

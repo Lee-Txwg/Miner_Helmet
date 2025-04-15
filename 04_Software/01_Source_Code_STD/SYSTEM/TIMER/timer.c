@@ -21,6 +21,7 @@ extern u8 humidityL;    // Humidity decimal part
 extern u8 temperatureH; // Temperature integer part
 extern u8 temperatureL; // Temperature decimal part
 extern float Light;     // Light intensity
+extern float smoke_ppm; // smoke concentration
 extern u8 alarmFlag;    // Alarm flag
 
 // TIM3 Interrupt Initialization
@@ -103,14 +104,15 @@ void TIM2_IRQHandler(void)   // TIM2 interrupt handler
     {
         TIM_ClearITPendingBit(TIM2, TIM_IT_Update);  // Clear TIMx interrupt pending bit: TIM update interrupt
 
-        sprintf(oledBuf, "Welcome");
+        // sprintf(oledBuf, "Welcome");
+        sprintf(oledBuf, "chan");
         OLED_ShowString(32, 0, (u8*)oledBuf, 16, 1); // Display "Welcome" at (32,0) with font size 16
         sprintf(oledBuf, "Hum:%d.%d %%", humidityH, humidityL);
         OLED_ShowString(0, 16, (u8*)oledBuf, 16, 1); // Display humidity at (0,16)
         sprintf(oledBuf, "Temp:%d.%d C", temperatureH, temperatureL);
         OLED_ShowString(0, 32, (u8*)oledBuf, 16, 1); // Display temperature at (0,32)
-        sprintf(oledBuf, "Light:%.1f Lx", Light);
-        OLED_ShowString(0, 48, (u8*)oledBuf, 16, 1); // Display light intensity at (0,48)
+        sprintf(oledBuf, "Smoke:%.1f PPM", smoke_ppm);
+        OLED_ShowString(0, 48, (u8*)oledBuf, 16, 1); // Display smoke concentration at (0,48)
         OLED_Refresh();
     }
 }
