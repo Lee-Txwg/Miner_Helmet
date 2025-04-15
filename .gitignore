@@ -17,6 +17,8 @@
 *.hex
 *.bin
 *.Bak
+
+#Filter large files
 *.zip
 *.iso
 *.tar
