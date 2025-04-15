@@ -1,48 +1,55 @@
 #include "main.h"
 
-u8 alarmFlag = 0;	   // Alarm flag status
+u8 alarmFlag = 0;      // Alarm flag status
 u8 alarm_is_free = 10; // Check if the alarm system is free, 0 means no free time
 
 u8 humidityH;
 u8 humidityL;
 u8 temperatureH;
 u8 temperatureL;
-extern char oledBuf[20]; // OLED display buffer
-float Light = 0;		 // Light intensity
-u8 Led_Status = 0;		 // LED status
+// Global threshold variables with default values
+volatile u8    temperatureThreshold = 30; // Default: 30°C
+volatile u8    humidityThreshold = 80;    // Default: 80%
+volatile float smokeThreshold = 50;       // Default: 50 (example value)
 
-char PUB_BUF[256];							// Publish data buffer
+// The light threshold remains unchanged
+const float lightThreshold = 1000.0;
+
+extern char oledBuf[20]; // OLED display buffer
+float Light = 0;         // Light intensity
+u8 Led_Status = 0;       // LED status
+
+char PUB_BUF[256];                          // Publish data buffer
 const char *devSubTopic[] = {"helmet/cmd"}; // Subscribe topic for commands
 const char devPubTopic[] = "helmet/status"; // Publish topic for status
-u8 ESP8266_INIT_OK = 0;						// ESP8266 initialization status
-
+u8 ESP8266_INIT_OK = 0;                     // ESP8266 initialization status
 
 // Retarget printf
 int fputc(int ch, FILE *f)
 {
-	while ((USART1->SR & 0X40) == 0)
-		;					  // Wait until transmission is complete
-	USART1->DR = (uint8_t)ch; // Send char
-	return ch;
+    while ((USART1->SR & 0X40) == 0)
+        ;                     // Wait until transmission is complete
+    USART1->DR = (uint8_t)ch; // Send char
+    return ch;
 }
 
 void USART_BaudRate_Init(uint32_t Data)
 {
-	USART_InitTypeDef USART_InitStructure;
-	
-  USART_InitStructure.USART_BaudRate = Data;
-  USART_InitStructure.USART_WordLength = USART_WordLength_8b;
-  USART_InitStructure.USART_StopBits = USART_StopBits_1;
-  USART_InitStructure.USART_Parity = USART_Parity_No;
-  USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
-  USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
-  USART_Init(USART3, &USART_InitStructure);
-  /* Enable USARTy Receive  interrupts */
-  USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
-  USART_ITConfig(USART3,USART_IT_IDLE,ENABLE);//Ê¹ÄÜ¿ÕÏÐÖÐ¶Ï
-  /* Enable the USART2 */
-  USART_Cmd(USART3, ENABLE);
-  delay_ms(10);//µÈ´ý10ms
+    USART_InitTypeDef USART_InitStructure;
+
+    USART_InitStructure.USART_BaudRate = Data;
+    USART_InitStructure.USART_WordLength = USART_WordLength_8b;
+    USART_InitStructure.USART_StopBits = USART_StopBits_1;
+    USART_InitStructure.USART_Parity = USART_Parity_No;
+    USART_InitStructure.USART_HardwareFlowControl = USART_HardwareFlowControl_None;
+    USART_InitStructure.USART_Mode = USART_Mode_Rx | USART_Mode_Tx;
+    USART_Init(USART3, &USART_InitStructure);
+    /* Enable USARTy Receive  interrupts */
+    USART_ITConfig(USART3, USART_IT_RXNE, ENABLE);
+    USART_ITConfig(USART3, USART_IT_IDLE, ENABLE); // Ê¹ÄÜ¿ÕÏÐÖÐ¶Ï
+    /* Enable the USART2 */
+    USART_Cmd(USART3, ENABLE);
+    delay_ms(10); // µÈ´ý10ms
 }
 
 #ifdef Version_Rollback
@@ -61,8 +68,8 @@ int main(void)
 
     /*----------------- 2. System Initialization -----------------*/
     /*--> [2.1] Hardware Init */
-    HW_Init();    
-    
+    HW_Init();
+
     /*--> [2.2] Network Init */
     Net_Init();
 
@@ -90,14 +97,22 @@ int main(void)
         /*--> [3.2] Communication Tasks */
         Comm_Handler(&tick);
 
+        // /*--> [3.3] Data Reception */
+        // rxData = ESP8266_GetIPD(3);
+        // if (rxData != NULL)
+        //     OneNet_RevPro(rxData);
+        // delay_ms(10);
+
         /*--> [3.3] Data Reception */
         rxData = ESP8266_GetIPD(3);
         if (rxData != NULL)
+        {
+            printf("Received data: %s1234344444444======\r\n", rxData); // 打印接收到的数据
             OneNet_RevPro(rxData);
+        }
         delay_ms(10);
     }
 }
-
 
 void HW_Init(void)
 {
@@ -217,9 +232,12 @@ void Sensor_Process(void)
     Led_Status = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4);
 
     /*--> [2.2] Alarm Logic */
+
     if (alarm_is_free == 10)
     {
-        alarmFlag = ((humidityH >= 80) || (temperatureH >= 30) || (Light >= 1000));
+        alarmFlag = ((humidityH >= humidityThreshold)       ||
+                     (temperatureH >= temperatureThreshold) ||
+                     (Light >= lightThreshold)              );
     }
     if (alarm_is_free < 10)
     {
@@ -235,25 +253,28 @@ void Sensor_Process(void)
 void Comm_Handler(unsigned short *tick)
 {
     /*----------------- 1. Communication Timing -----------------*/
-    if (++(*tick) >= 200)
+    if (++(*tick) >= 150)
     {
         /*--> [1.1] Status Update */
         Led_Status = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4);
         DEBUG_LOG("==================================================================================");
-        
+
         /*----------------- 2. Data Publishing -----------------*/
         /*--> [2.1] Message Preparation */
         DEBUG_LOG("Publishing to OneNet ----- OneNet_Publish");
-		sprintf(PUB_BUF, "{\"temperature\":%d.%d,\"humidity\":%d.%d,\"latitude\":39.9042,\"longitude\":116.4074,\"smoke\":%d,\"light\":\"%s\",\"danger\":%s}",
+        sprintf(PUB_BUF, "{\"temperature\":%d.%d,\"humidity\":%d.%d,\"smoke\":%d,"
+            "\"latitude\":39.9042,\"longitude\":116.4074,\"light\":\"%s\",\"danger\":%s,"
+            "\"temperatureThreshold\":%d,\"humidityThreshold\":%d,\"smokeThreshold\":%f}",
             temperatureH, temperatureL,
             humidityH, humidityL,
-            0,  // Smoke level placeholder
+            0,  // Smoke sensor reading placeholder
             Led_Status ? "on" : "off",
-            alarmFlag ? "true" : "false");
+            alarmFlag ? "true" : "false",
+            temperatureThreshold, humidityThreshold, smokeThreshold);
 
         /*--> [2.2] Data Transmission */
         OneNet_Publish(devPubTopic, PUB_BUF);
-        
+
         /*----------------- 3. Cleanup -----------------*/
         DEBUG_LOG("==================================================================================");
         *tick = 0;
@@ -261,169 +282,165 @@ void Comm_Handler(unsigned short *tick)
     }
 }
 
-
-
-
-
 #else
 int main(void)
 {
-	unsigned short timeCount = 0;  // Time counter
-	unsigned char *dataPtr = NULL; // Data pointer
+    unsigned short timeCount = 0;  // Time counter
+    unsigned char *dataPtr = NULL; // Data pointer
 
-	Usart1_Init(115200); // Initialize UART1 for debugging
-	DEBUG_LOG("\r\n");
-	DEBUG_LOG("UART1 Initialization         [OK]");
-	delay_init(); // Initialize delay functions
-	DEBUG_LOG("Delay initialization         [OK]");
+    Usart1_Init(115200); // Initialize UART1 for debugging
+    DEBUG_LOG("\r\n");
+    DEBUG_LOG("UART1 Initialization         [OK]");
+    delay_init(); // Initialize delay functions
+    DEBUG_LOG("Delay initialization         [OK]");
 
-	delay_ms(500);		 // Wait for OLED initialization
-	OLED_Init();		 // Initialize OLED display
-	OLED_ColorTurn(0);	 // Set OLED color mode (0 for normal display, 1 for reversed)
-	OLED_DisplayTurn(0); // Set OLED display direction (0 for normal, 1 for rotated)
-	OLED_Clear();		 // Clear OLED screen
-	DEBUG_LOG("OLED initialization          [OK]");
-	OLED_Refresh_Line("OLED");
+    delay_ms(500);       // Wait for OLED initialization
+    OLED_Init();         // Initialize OLED display
+    OLED_ColorTurn(0);   // Set OLED color mode (0 for normal display, 1 for reversed)
+    OLED_DisplayTurn(0); // Set OLED display direction (0 for normal, 1 for rotated)
+    OLED_Clear();        // Clear OLED screen
+    DEBUG_LOG("OLED initialization          [OK]");
+    OLED_Refresh_Line("OLED");
 
-	NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2); // Set priority group for interrupts
-	DEBUG_LOG("Interrupt priority set       [OK]");
-	OLED_Refresh_Line("NVIC");
+    NVIC_PriorityGroupConfig(NVIC_PriorityGroup_2); // Set priority group for interrupts
+    DEBUG_LOG("Interrupt priority set       [OK]");
+    OLED_Refresh_Line("NVIC");
 
-	LED_Init(); // Initialize LED GPIO
-	DEBUG_LOG("LED initialization           [OK]");
-	OLED_Refresh_Line("LED");
+    LED_Init(); // Initialize LED GPIO
+    DEBUG_LOG("LED initialization           [OK]");
+    OLED_Refresh_Line("LED");
 
-	KEY_Init(); // Initialize button GPIO
-	DEBUG_LOG("Key initialization           [OK]");
-	OLED_Refresh_Line("Key");
+    KEY_Init(); // Initialize button GPIO
+    DEBUG_LOG("Key initialization           [OK]");
+    OLED_Refresh_Line("Key");
 
-	EXTIX_Init(); // Initialize external interrupt for exit
-	DEBUG_LOG("External interrupt initialized [OK]");
-	OLED_Refresh_Line("EXIT");
+    EXTIX_Init(); // Initialize external interrupt for exit
+    DEBUG_LOG("External interrupt initialized [OK]");
+    OLED_Refresh_Line("EXIT");
 
-	BEEP_Init(); // Initialize BEEP (beeper)
-	DEBUG_LOG("BEEP initialization          [OK]");
-	OLED_Refresh_Line("BEEP");
+    BEEP_Init(); // Initialize BEEP (beeper)
+    DEBUG_LOG("BEEP initialization          [OK]");
+    OLED_Refresh_Line("BEEP");
 
-	DHT11_Init(); // Initialize DHT11 sensor
-	DEBUG_LOG("DHT11 initialization         [OK]");
-	OLED_Refresh_Line("DHT11");
+    DHT11_Init(); // Initialize DHT11 sensor
+    DEBUG_LOG("DHT11 initialization         [OK]");
+    OLED_Refresh_Line("DHT11");
 
-	BH1750_Init(); // Initialize BH1750 light sensor
-	DEBUG_LOG("BH1750 initialization        [OK]");
-	OLED_Refresh_Line("BH1750");
+    BH1750_Init(); // Initialize BH1750 light sensor
+    DEBUG_LOG("BH1750 initialization        [OK]");
+    OLED_Refresh_Line("BH1750");
 
-	Usart2_Init(115200); // Initialize UART2 for STM32-ESP8266 communication
-	DEBUG_LOG("UART2 initialization         [OK]");
-	OLED_Refresh_Line("UART2");
+    Usart2_Init(115200); // Initialize UART2 for STM32-ESP8266 communication
+    DEBUG_LOG("UART2 initialization         [OK]");
+    OLED_Refresh_Line("UART2");
 
-	DEBUG_LOG("Peripheral initialization    [OK]");
+    DEBUG_LOG("Peripheral initialization    [OK]");
 
-	delay_ms(1000);
+    delay_ms(1000);
 
-	DEBUG_LOG("Initializing ESP8266 WiFi module...");
-	if (!ESP8266_INIT_OK)
-	{
-		OLED_Clear();
-		OLED_ShowString(0, 0, (u8 *)"WiFi", 16, 1);
-		OLED_ShowChinese(32, 0, 8, 16, 1);	// Show Chinese characters (message part 1)
-		OLED_ShowChinese(48, 0, 9, 16, 1);	// Show Chinese characters (message part 2)
-		OLED_ShowChinese(64, 0, 10, 16, 1); // Show Chinese characters (message part 3)
-		OLED_ShowString(80, 0, (u8 *)"...", 16, 1);
+    DEBUG_LOG("Initializing ESP8266 WiFi module...");
+    if (!ESP8266_INIT_OK)
+    {
+        OLED_Clear();
+        OLED_ShowString(0, 0, (u8 *)"WiFi", 16, 1);
+        OLED_ShowChinese(32, 0, 8, 16, 1);  // Show Chinese characters (message part 1)
+        OLED_ShowChinese(48, 0, 9, 16, 1);  // Show Chinese characters (message part 2)
+        OLED_ShowChinese(64, 0, 10, 16, 1); // Show Chinese characters (message part 3)
+        OLED_ShowString(80, 0, (u8 *)"...", 16, 1);
 
-		OLED_Refresh();
-	}
-	ESP8266_Init(); // Initialize ESP8266 WiFi module
+        OLED_Refresh();
+    }
+    ESP8266_Init(); // Initialize ESP8266 WiFi module
 
-	OLED_Clear();
-	OLED_ShowChinese(0, 0, 4, 16, 1);	// Show Chinese characters (message part 4)
-	OLED_ShowChinese(16, 0, 5, 16, 1);	// Show Chinese characters (message part 5)
-	OLED_ShowChinese(32, 0, 6, 16, 1);	// Show Chinese characters (message part 6)
-	OLED_ShowChinese(48, 0, 8, 16, 1);	// Show Chinese characters (message part 7)
-	OLED_ShowChinese(64, 0, 9, 16, 1);	// Show Chinese characters (message part 8)
-	OLED_ShowChinese(80, 0, 10, 16, 1); // Show Chinese characters (message part 9)
-	OLED_ShowString(96, 0, (u8 *)"...", 16, 1);
-	OLED_Refresh();
+    OLED_Clear();
+    OLED_ShowChinese(0, 0, 4, 16, 1);   // Show Chinese characters (message part 4)
+    OLED_ShowChinese(16, 0, 5, 16, 1);  // Show Chinese characters (message part 5)
+    OLED_ShowChinese(32, 0, 6, 16, 1);  // Show Chinese characters (message part 6)
+    OLED_ShowChinese(48, 0, 8, 16, 1);  // Show Chinese characters (message part 7)
+    OLED_ShowChinese(64, 0, 9, 16, 1);  // Show Chinese characters (message part 8)
+    OLED_ShowChinese(80, 0, 10, 16, 1); // Show Chinese characters (message part 9)
+    OLED_ShowString(96, 0, (u8 *)"...", 16, 1);
+    OLED_Refresh();
 
-	while (OneNet_DevLink())
-	{ // Wait for OneNET device connection
-		delay_ms(500);
-	}
+    while (OneNet_DevLink())
+    { // Wait for OneNET device connection
+        delay_ms(500);
+    }
 
-	OLED_Clear();
+    OLED_Clear();
 
-	TIM2_Int_Init(4999, 7199); // Initialize Timer 2 for interrupts
-	TIM3_Int_Init(2499, 7199); // Initialize Timer 3 for interrupts
+    TIM2_Int_Init(4999, 7199); // Initialize Timer 2 for interrupts
+    TIM3_Int_Init(2499, 7199); // Initialize Timer 3 for interrupts
 
-	BEEP = 0; // Turn off the beep
-	delay_ms(250);
-	BEEP = 1; // Turn on the beep
+    BEEP = 0; // Turn off the beep
+    delay_ms(250);
+    BEEP = 1; // Turn on the beep
 
-	OneNet_Subscribe(devSubTopic, 1); // Subscribe to OneNET device topic
+    OneNet_Subscribe(devSubTopic, 1); // Subscribe to OneNET device topic
 
-	while (1)
-	{
-		if (timeCount % 40 == 0) // 1000ms / 25 = 40 iterations per second
-		{
-			/********** Waiting to acquire data from the sensor **************/
-			DHT11_Read_Data(&humidityH, &humidityL, &temperatureH, &temperatureL);
+    while (1)
+    {
+        if (timeCount % 40 == 0) // 1000ms / 25 = 40 iterations per second
+        {
+            /********** Waiting to acquire data from the sensor **************/
+            DHT11_Read_Data(&humidityH, &humidityL, &temperatureH, &temperatureL);
 
-			/********** Waiting to acquire data from the light sensor **************/
-			if (!i2c_CheckDevice(BH1750_Addr))
-			{
-				Light = LIght_Intensity();
-			}
+            /********** Waiting to acquire data from the light sensor **************/
+            if (!i2c_CheckDevice(BH1750_Addr))
+            {
+                Light = LIght_Intensity();
+            }
 
-			/********** Getting the LED0 status **************/
-			Led_Status = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4);
+            /********** Getting the LED0 status **************/
+            Led_Status = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4);
 
-			/********** Alarm logic **************/
-			if (alarm_is_free == 10) // Initial value for alarm_is_free is set to 10
-			{
-				if ((humidityH < 80) && (temperatureH < 30) && (Light < 1000))
-					alarmFlag = 0;
-				else
-					alarmFlag = 1;
-			}
-			if (alarm_is_free < 10)
-				alarm_is_free++;
-			//      DEBUG_LOG("alarm_is_free = %d", alarm_is_free);
-			//      DEBUG_LOG("alarmFlag = %d\r\n", alarmFlag);
+            /********** Alarm logic **************/
+            if (alarm_is_free == 10) // Initial value for alarm_is_free is set to 10
+            {
+                if ((humidityH < 80) && (temperatureH < 30) && (Light < 1000))
+                    alarmFlag = 0;
+                else
+                    alarmFlag = 1;
+            }
+            if (alarm_is_free < 10)
+                alarm_is_free++;
+            //      DEBUG_LOG("alarm_is_free = %d", alarm_is_free);
+            //      DEBUG_LOG("alarmFlag = %d\r\n", alarmFlag);
 
-			/********** Logging data **************/
-			DEBUG_LOG(" | Humidity: %d.%d %% | Temperature: %d.%d C | Light Intensity: %.1f lx | LED Status: %s | Alarm Status: %s | ",
-					  humidityH, humidityL, temperatureH, temperatureL, Light,
-					  Led_Status ? "Off" : "On", alarmFlag ? "Activated" : "Stopped");
-		}
-		if (++timeCount >= 200) // 5000ms / 25 = 200 iterations for 5000ms
-		{
-			Led_Status = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4); // Get LED0 status
-			DEBUG_LOG("==================================================================================");
-			// DEBUG_LOG("Publishing to OneNet ----- OneNet_Publish");
-			// sprintf(PUB_BUF, "{\"Hum\":%d.%d,\"Temp\":%d.%d,\"Light\":%.1f,\"Led\":%d,\"Beep\":%d}",
-			//         humidityH, humidityL, temperatureH, temperatureL, Light, Led_Status ? 0 : 1, alarmFlag);
-			// OneNet_Publish(devPubTopic, PUB_BUF);
+            /********** Logging data **************/
+            DEBUG_LOG(" | Humidity: %d.%d %% | Temperature: %d.%d C | Light Intensity: %.1f lx | LED Status: %s | Alarm Status: %s | ",
+                      humidityH, humidityL, temperatureH, temperatureL, Light,
+                      Led_Status ? "Off" : "On", alarmFlag ? "Activated" : "Stopped");
+        }
+        if (++timeCount >= 200) // 5000ms / 25 = 200 iterations for 5000ms
+        {
+            Led_Status = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4); // Get LED0 status
+            DEBUG_LOG("==================================================================================");
+            // DEBUG_LOG("Publishing to OneNet ----- OneNet_Publish");
+            // sprintf(PUB_BUF, "{\"Hum\":%d.%d,\"Temp\":%d.%d,\"Light\":%.1f,\"Led\":%d,\"Beep\":%d}",
+            //         humidityH, humidityL, temperatureH, temperatureL, Light, Led_Status ? 0 : 1, alarmFlag);
+            // OneNet_Publish(devPubTopic, PUB_BUF);
 
-			// ... existing code ...
-			DEBUG_LOG("Publishing to OneNet ----- OneNet_Publish");
-			sprintf(PUB_BUF, "{\"temperature\":%d.%d,\"humidity\":%d.%d,\"smoke\":%d,\"latitude\":39.9042,\"longitude\":116.4074,\"light\":\"%s\",\"danger\":%s}",
-					temperatureH, temperatureL,	   // Temperature value from sensor
-					humidityH, humidityL,		   // Humidity value from sensor
-					0,							   // Smoke detection status is 0 (not triggered)
-					Led_Status ? "on" : "off",	   // Light status converted from Led_Status
-					alarmFlag ? "true" : "false"); // Danger status based on alarmFlag
-			OneNet_Publish(devPubTopic, PUB_BUF);
-			// ... existing code ...
-			DEBUG_LOG("==================================================================================");
-			timeCount = 0;
-			ESP8266_Clear();
-		}
+            // ... existing code ...
+            DEBUG_LOG("Publishing to OneNet ----- OneNet_Publish");
+            sprintf(PUB_BUF, "{\"temperature\":%d.%d,\"humidity\":%d.%d,\"smoke\":%d,\"latitude\":39.9042,\"longitude\":116.4074,\"light\":\"%s\",\"danger\":%s}",
+                    temperatureH, temperatureL,    // Temperature value from sensor
+                    humidityH, humidityL,          // Humidity value from sensor
+                    0,                             // Smoke detection status is 0 (not triggered)
+                    Led_Status ? "on" : "off",     // Light status converted from Led_Status
+                    alarmFlag ? "true" : "false"); // Danger status based on alarmFlag
+            OneNet_Publish(devPubTopic, PUB_BUF);
+            // ... existing code ...
+            DEBUG_LOG("==================================================================================");
+            timeCount = 0;
+            ESP8266_Clear();
+        }
 
-		dataPtr = ESP8266_GetIPD(3);
-		if (dataPtr != NULL)
-			OneNet_RevPro(dataPtr);
-		delay_ms(10);
-	}
+        dataPtr = ESP8266_GetIPD(3);
+        if (dataPtr != NULL)
+            OneNet_RevPro(dataPtr);
+        delay_ms(10);
+    }
 }
 
 // int main()

@@ -9,6 +9,7 @@
         "stm32f10x.h": "c",
         "onenet.h": "c",
         "gps.h": "c",
-        "stm32f10x_it.h": "c"
+        "stm32f10x_it.h": "c",
+        "mqttkit.h": "c"
     }
 }

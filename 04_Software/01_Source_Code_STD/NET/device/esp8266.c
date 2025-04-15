@@ -163,51 +163,55 @@ void ESP8266_SendData(unsigned char *data, unsigned short len)
 }
 
 //==========================================================
-//	�������ƣ�	ESP8266_GetIPD
+//  Function Name:    ESP8266_GetIPD
 //
-//	�������ܣ�	��ȡƽ̨���ص�����
+//  Function Purpose: Receive the data sent back from the platform
 //
-//	��ڲ�����	�ȴ���ʱ��(����10ms)
+//  Input Parameter:  Wait timeout (unit: 10ms)
 //
-//	���ز�����	ƽ̨���ص�ԭʼ����
+//  Return Value:     Original data returned from the platform
 //
-//	˵����		��ͬ�����豸���صĸ�ʽ��ͬ����Ҫȥ����
-//				��ESP8266�ķ��ظ�ʽΪ	"+IPD,x:yyy"	x�������ݳ��ȣ�yyy����������
+//  Note:             The return format may be different for different devices,
+//                    so it needs to be parsed accordingly.
+//                    The ESP8266 returns "+IPD,x:yyy", where x is the data length,
+//                    and yyy is the specific data.
+//
 //==========================================================
 unsigned char *ESP8266_GetIPD(unsigned short timeOut)
 {
 
-	char *ptrIPD = NULL;
-	
-	do
-	{
-		if(ESP8266_WaitRecive() == REV_OK)								//����������
-		{
-			ptrIPD = strstr((char *)esp8266_buf, "IPD,");				//������IPD��ͷ
-			if(ptrIPD == NULL)											//���û�ҵ���������IPDͷ���ӳ٣�������Ҫ�ȴ�һ�ᣬ�����ᳬ���趨��ʱ��
-			{
-				//DEBUG_LOG("\"IPD\" not found\r\n");
-			}
-			else
-			{
-				ptrIPD = strchr(ptrIPD, ':');							//�ҵ�':'
-				if(ptrIPD != NULL)
-				{
-					ptrIPD++;
-					return (unsigned char *)(ptrIPD);
-				}
-				else
-					return NULL;
-				
-			}
-		}
-		delay_ms(5);
-		timeOut--;	//��ʱ�ȴ�
-	} while(timeOut > 0);
-	
-	return NULL;														//��ʱ��δ�ҵ������ؿ�ָ��
+    char *ptrIPD = NULL;
+    
+    do
+    {
+        if(ESP8266_WaitRecive() == REV_OK)                               // Data received successfully
+        {
+            ptrIPD = strstr((char *)esp8266_buf, "IPD,");                // Find the "IPD" header
+            if(ptrIPD == NULL)                                           // If not found, wait and retry until timeout
+            {
+                //DEBUG_LOG("\"IPD\" not found\r\n");
+            }
+            else
+            {
+                ptrIPD = strchr(ptrIPD, ':');                            // Find ':'
+                if(ptrIPD != NULL)
+                {
+                    ptrIPD++;
+                    return (unsigned char *)(ptrIPD);
+                }
+                else
+                    return NULL;
+                
+            }
+        }
+        delay_ms(5);
+        timeOut--;     // Decrease timeout counter
+    } while(timeOut > 0);
+    
+    return NULL;                                                       // Return NULL pointer if not found within timeout
 
 }
+
 
 //==========================================================
 //  Function Name:   ESP8266_Init
