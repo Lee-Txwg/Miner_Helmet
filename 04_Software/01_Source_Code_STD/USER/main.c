@@ -3,10 +3,11 @@
 u8 alarmFlag = 0;      // Alarm flag status
 u8 alarm_is_free = 10; // Check if the alarm system is free, 0 means no free time
 
-u8 humidityH;
-u8 humidityL;
-u8 temperatureH;
-u8 temperatureL;
+u8    humidityH;
+u8    humidityL;
+u8    temperatureH;
+u8    temperatureL;
+float smoke_ppm;
 // Global threshold variables with default values
 volatile u8    temperatureThreshold = 30; // Default: 30°C
 volatile u8    humidityThreshold = 80;    // Default: 80%
@@ -107,7 +108,7 @@ int main(void)
         rxData = ESP8266_GetIPD(3);
         if (rxData != NULL)
         {
-            printf("Received data: %s1234344444444======\r\n", rxData); // 打印接收到的数据
+            //printf("Received data: %s1234344444444======\r\n", rxData); // 打印接收到的数据
             OneNet_RevPro(rxData);
         }
         delay_ms(10);
@@ -168,6 +169,11 @@ void HW_Init(void)
     DEBUG_LOG("BH1750 initialization        [OK]");
     OLED_Refresh_Line("BH1750");
 
+    ADCx_Init();   // Initialize ADC for MQ2 sensor
+    DEBUG_LOG("MQ2 initialization           [OK]");
+    OLED_Refresh_Line("MQ2");
+    
+
     /*--> [4.4] Communication Interface */
     Usart2_Init(115200);
     DEBUG_LOG("UART2 initialization         [OK]");
@@ -218,6 +224,10 @@ void Net_Init(void)
 void Sensor_Process(void)
 {
     /*----------------- 1. Sensor Data Acquisition -----------------*/
+    static float RS, R0 = 6.64;  // R0 is the reference resistance
+    static u16 smoke_adc_value;
+    static float smoke_vol;
+
     /*--> [1.1] Temperature and Humidity */
     DHT11_Read_Data(&humidityH, &humidityL, &temperatureH, &temperatureL);
 
@@ -227,17 +237,24 @@ void Sensor_Process(void)
         Light = LIght_Intensity();
     }
 
+    /*--> [1.3] Smoke Sensor Reading */
+    smoke_adc_value = Get_ADC_Value(ADC_Channel_1, 100);
+    smoke_vol = (float)smoke_adc_value * (3.3 / 4096);
+    RS = (5 - smoke_vol) / smoke_vol * 0.5;
+    smoke_ppm = pow(11.5428 * R0 / RS, 0.6549f) * 100;
+    printf("Smoke: %.2f PPM\n", smoke_ppm);
+
     /*----------------- 2. Status Monitoring -----------------*/
     /*--> [2.1] LED Status */
     Led_Status = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4);
 
     /*--> [2.2] Alarm Logic */
-
     if (alarm_is_free == 10)
     {
         alarmFlag = ((humidityH >= humidityThreshold)       ||
                      (temperatureH >= temperatureThreshold) ||
-                     (Light >= lightThreshold)              );
+                     (Light >= lightThreshold)              ||
+                     (smoke_ppm >= smokeThreshold)          );
     }
     if (alarm_is_free < 10)
     {
@@ -245,29 +262,30 @@ void Sensor_Process(void)
     }
 
     /*----------------- 3. Data Logging -----------------*/
-    DEBUG_LOG(" | Humidity: %d.%d %% | Temperature: %d.%d C | Light Intensity: %.1f lx | LED Status: %s | Alarm Status: %s | ",
-              humidityH, humidityL, temperatureH, temperatureL, Light,
-              Led_Status ? "Off" : "On", alarmFlag ? "Activated" : "Stopped");
+    // DEBUG_LOG(" | Humidity: %d.%d %% | Temperature: %d.%d C | Light Intensity: %.1f lx | Smoke: %.2f PPM | LED Status: %s | Alarm Status: %s | ",
+    //           humidityH, humidityL, temperatureH, temperatureL, Light, smoke_ppm,
+    //           Led_Status ? "Off" : "On", alarmFlag ? "Activated" : "Stopped");
 }
 
 void Comm_Handler(unsigned short *tick)
 {
     /*----------------- 1. Communication Timing -----------------*/
-    if (++(*tick) >= 150)
+    if (++(*tick) >= 100)
     {
         /*--> [1.1] Status Update */
         Led_Status = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4);
-        DEBUG_LOG("==================================================================================");
+        //DEBUG_LOG("==================================================================================");
+        printf("==========================\r\n");
 
         /*----------------- 2. Data Publishing -----------------*/
         /*--> [2.1] Message Preparation */
-        DEBUG_LOG("Publishing to OneNet ----- OneNet_Publish");
-        sprintf(PUB_BUF, "{\"temperature\":%d.%d,\"humidity\":%d.%d,\"smoke\":%d,"
+        DEBUG_LOG("Publishing to EMQ ----- EMQ_Publish");
+        sprintf(PUB_BUF, "{\"temperature\":%d.%d,\"humidity\":%d.%d,\"smoke\":%.2f,"
             "\"latitude\":39.9042,\"longitude\":116.4074,\"light\":\"%s\",\"danger\":%s,"
-            "\"temperatureThreshold\":%d,\"humidityThreshold\":%d,\"smokeThreshold\":%f}",
+            "\"temperatureThreshold\":%d,\"humidityThreshold\":%d,\"smokeThreshold\":%.2f}",
             temperatureH, temperatureL,
             humidityH, humidityL,
-            0,  // Smoke sensor reading placeholder
+            smoke_ppm,  // Updated to use actual smoke sensor reading
             Led_Status ? "on" : "off",
             alarmFlag ? "true" : "false",
             temperatureThreshold, humidityThreshold, smokeThreshold);
@@ -276,7 +294,8 @@ void Comm_Handler(unsigned short *tick)
         OneNet_Publish(devPubTopic, PUB_BUF);
 
         /*----------------- 3. Cleanup -----------------*/
-        DEBUG_LOG("==================================================================================");
+        printf("==========================\r\n");
+        //DEBUG_LOG("==================================================================================");
         *tick = 0;
         ESP8266_Clear();
     }

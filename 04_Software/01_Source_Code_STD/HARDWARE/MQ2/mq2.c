@@ -36,18 +36,39 @@ u16 Get_ADC_Value(u8 ch, u8 times)
 {
     u32 temp_val = 0;
     u8 t;
-
-    // Configure ADC channel, sequence, and sampling time
-    ADC_RegularChannelConfig(ADC1, ch, 1, ADC_SampleTime_239Cycles5); // Sample time of 55.5 cycles for better accuracy
+    u16 adc_buf[255];  // Buffer for ADC values, ensure times <= 255
+    u16 max_val, min_val;
     
+    // Ensure at least 3 samples for valid filtering
+    if(times < 3) times = 3;
+    
+    // Configure ADC channel, sequence, and sampling time
+    ADC_RegularChannelConfig(ADC1, ch, 1, ADC_SampleTime_239Cycles5);
+    
+    // Collect ADC samples
     for(t = 0; t < times; t++)
     {
-        ADC_SoftwareStartConvCmd(ADC1, ENABLE);   // Start ADC conversion via software trigger
+        ADC_SoftwareStartConvCmd(ADC1, ENABLE);   // Start ADC conversion
         while(!ADC_GetFlagStatus(ADC1, ADC_FLAG_EOC));  // Wait for conversion to complete
-        temp_val += ADC_GetConversionValue(ADC1);  // Accumulate conversion result
+        adc_buf[t] = ADC_GetConversionValue(ADC1);  // Store ADC value
         ADC_ClearFlag(ADC1, ADC_FLAG_EOC);  // Clear end of conversion flag
-        delay_ms(5);  // Small delay to ensure stability
+        delay_ms(5);  // Small delay for stability
     }
     
-    return temp_val / times;  // Return the average value
+    // Find maximum and minimum values
+    max_val = adc_buf[0];
+    min_val = adc_buf[0];
+    temp_val = adc_buf[0];
+    
+    for(t = 1; t < times; t++)
+    {
+        if(adc_buf[t] > max_val) max_val = adc_buf[t];
+        if(adc_buf[t] < min_val) min_val = adc_buf[t];
+        temp_val += adc_buf[t];
+    }
+    
+    // Calculate average excluding max and min values
+    temp_val = temp_val - max_val - min_val;
+    return temp_val / (times - 2);  // Return average of remaining values
 }
+
