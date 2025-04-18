@@ -39,6 +39,7 @@
 #include "cJSON.h"
 
 #include "led.h"
+#include "beep.h"
 
 #define PROID "huaqing_smarthome"
 
@@ -47,14 +48,13 @@
 #define DEVID "huaqing_smarthome"
 
 extern unsigned char esp8266_buf[128];
-extern u8 alarmFlag; // �Ƿ񱨾��ı�־
 extern u8 alarm_is_free;
 
 // Global threshold variables with default values
-extern volatile u8    temperatureThreshold; // Default: 30°C
-extern volatile u8    humidityThreshold;    // Default: 80%
-extern volatile float smokeThreshold;       // Default: 50 (example value)
-extern          u8    Led_Status;           // LED status
+extern volatile u8 temperatureThreshold; // Default: 30°C
+extern volatile u8 humidityThreshold;    // Default: 80%
+extern volatile float smokeThreshold;    // Default: 50 (example value)
+extern u8 Led_Status;                    // LED status
 
 //==========================================================
 //	�������ƣ�	OneNet_DevLink
@@ -330,7 +330,7 @@ void OneNet_Publish(const char *topic, const char *msg)
 
 void OneNet_RevPro(unsigned char *cmd)
 {
-    //MQTT_PACKET_STRUCTURE mqttPacket = {NULL, 0, 0, 0};
+    // MQTT_PACKET_STRUCTURE mqttPacket = {NULL, 0, 0, 0};
 
     char *req_payload = NULL;
     char *cmdid_topic = NULL;
@@ -402,6 +402,22 @@ void OneNet_RevPro(unsigned char *cmd)
                     }
                 }
 
+                // remote_warning
+                tmp = cJSON_GetObjectItem(json, "remote_warning");
+                if (tmp && tmp->type == cJSON_String)
+                {
+                    if (strcmp(tmp->valuestring, "activate") == 0)
+                    {
+                        BEEP_remote = 0;
+                        DEBUG_LOG("Remote Warning ACTIVATED\r\n");
+                    }
+                    else if (strcmp(tmp->valuestring, "deactivate") == 0)
+                    {
+                        BEEP_remote = 1;
+                        DEBUG_LOG("Remote Warning DEACTIVATED\r\n");
+                    }
+                }
+                
                 cJSON_Delete(json);
             }
         }

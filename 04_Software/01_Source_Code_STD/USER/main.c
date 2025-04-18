@@ -1,7 +1,7 @@
 #include "main.h"
 
-u8 alarmFlag = 0;      // Alarm flag status
-u8 alarm_is_free = 10; // Check if the alarm system is free, 0 means no free time
+volatile u8 alarmFlag = 0;      // Alarm flag status
+volatile u8 alarm_is_free = 10; // Check if the alarm system is free, 0 means no free time
 
 u8    humidityH;
 u8    humidityL;

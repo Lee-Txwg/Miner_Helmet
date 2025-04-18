@@ -3,10 +3,10 @@
 #define __BEEP_H	 
 #include "sys.h"
 
-#define BEEP PAout(0)	// PA0
-	
+#define BEEP        PAout(0)	// PA0
+#define BEEP_remote PBout(9)	// PB9
 
-void BEEP_Init(void);//³õÊ¼»¯
+void BEEP_Init(void);//ï¿½ï¿½Ê¼ï¿½ï¿½
 
 		 				    
 #endif
