@@ -83,23 +83,6 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=CHRKAUBE
 
-[Document3]
-DocumentPath=jlc.PcbLib
-AnnotationEnabled=1
-AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
-AnnotateSuffix=
-AnnotateScope=All
-AnnotateOrder=-1
-DoLibraryUpdate=1
-DoDatabaseUpdate=1
-ClassGenCCAutoEnabled=1
-ClassGenCCAutoRoomEnabled=0
-ClassGenNCAutoScope=None
-DItemRevisionGUID=
-GenerateClassCluster=0
-DocumentUniqueId=JQJHGIRC
-
 [GeneratedDocument1]
 DocumentPath=Project Outputs for safety_helmet\Design Rule Check - PCB1.html
 DItemRevisionGUID=
