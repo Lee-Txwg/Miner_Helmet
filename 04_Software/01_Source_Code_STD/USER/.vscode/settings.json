@@ -5,6 +5,7 @@
         "gps.h": "c",
         "main.h": "c",
         "usart.h": "c",
-        "delay.h": "c"
+        "delay.h": "c",
+        "stdio.h": "c"
     }
 }

@@ -1,5 +1,6 @@
 #include "timer.h"
 #include "stdio.h"
+#include "gps.h"
 
 //////////////////////////////////////////////////////////////////////////////////	 
 // This code is for learning purposes only. Without the author's permission, it cannot be used for any other purposes.
@@ -14,6 +15,13 @@
 //////////////////////////////////////////////////////////////////////////////////	  
 
 char oledBuf[20];
+
+extern nmea_msg gpsx;
+// Global GPS display variables
+float g_latitude;
+float g_longitude;
+char  g_ns_hemi;
+char  g_ew_hemi;
 
 // External variable declarations
 extern u8 humidityH;    // Humidity integer part
@@ -98,21 +106,52 @@ void TIM2_Int_Init(u16 arr, u16 psc)
     TIM_Cmd(TIM2, ENABLE);  // Enable TIMx peripheral
 }
 
+// void TIM2_IRQHandler(void)   // TIM2 interrupt handler
+// {
+//     if (TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET) // Check if the specified TIM interrupt occurred: TIM update interrupt
+//     {
+//         TIM_ClearITPendingBit(TIM2, TIM_IT_Update);  // Clear TIMx interrupt pending bit: TIM update interrupt
+
+//         // sprintf(oledBuf, "Welcome");
+//         sprintf(oledBuf, "chan");
+//         OLED_ShowString(32, 0, (u8*)oledBuf, 16, 1); // Display "Welcome" at (32,0) with font size 16
+//         sprintf(oledBuf, "Hum:%d.%d %%", humidityH, humidityL);
+//         OLED_ShowString(0, 16, (u8*)oledBuf, 16, 1); // Display humidity at (0,16)
+//         sprintf(oledBuf, "Temp:%d.%d C", temperatureH, temperatureL);
+//         OLED_ShowString(0, 32, (u8*)oledBuf, 16, 1); // Display temperature at (0,32)
+//         sprintf(oledBuf, "Smoke:%.1f PPM", smoke_ppm);
+//         OLED_ShowString(0, 48, (u8*)oledBuf, 16, 1); // Display smoke concentration at (0,48)
+//         OLED_Refresh();
+//     }
+// }
+
 void TIM2_IRQHandler(void)   // TIM2 interrupt handler
 {
-    if (TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET) // Check if the specified TIM interrupt occurred: TIM update interrupt
+    if (TIM_GetITStatus(TIM2, TIM_IT_Update) != RESET)
     {
-        TIM_ClearITPendingBit(TIM2, TIM_IT_Update);  // Clear TIMx interrupt pending bit: TIM update interrupt
+        TIM_ClearITPendingBit(TIM2, TIM_IT_Update);
 
-        // sprintf(oledBuf, "Welcome");
-        sprintf(oledBuf, "chan");
-        OLED_ShowString(32, 0, (u8*)oledBuf, 16, 1); // Display "Welcome" at (32,0) with font size 16
+        // Update globals
+        g_longitude = gpsx.longitude / 100000.0f;
+        g_latitude  = gpsx.latitude  / 100000.0f;
+        g_ns_hemi   = gpsx.nshemi;   // 'N' or 'S'
+        g_ew_hemi   = gpsx.ewhemi;   // 'E' or 'W'
+
+        // Display first line
+        sprintf(oledBuf, "Latitude:%.5f %c", g_latitude, g_ns_hemi);
+        OLED_ShowString(0, 0, (u8*)oledBuf, 8, 1);
+
+        sprintf(oledBuf, "Longitude:%.5f %c", g_longitude, g_ew_hemi);
+        OLED_ShowString(0, 8, (u8*)oledBuf, 8, 1);
+
+        // Rest of display...
         sprintf(oledBuf, "Hum:%d.%d %%", humidityH, humidityL);
-        OLED_ShowString(0, 16, (u8*)oledBuf, 16, 1); // Display humidity at (0,16)
+        OLED_ShowString(0, 16, (u8*)oledBuf, 16, 1);
         sprintf(oledBuf, "Temp:%d.%d C", temperatureH, temperatureL);
-        OLED_ShowString(0, 32, (u8*)oledBuf, 16, 1); // Display temperature at (0,32)
+        OLED_ShowString(0, 32, (u8*)oledBuf, 16, 1);
         sprintf(oledBuf, "Smoke:%.1f PPM", smoke_ppm);
-        OLED_ShowString(0, 48, (u8*)oledBuf, 16, 1); // Display smoke concentration at (0,48)
+        OLED_ShowString(0, 48, (u8*)oledBuf, 16, 1);
+
         OLED_Refresh();
     }
 }
