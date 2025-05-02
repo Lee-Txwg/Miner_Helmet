@@ -173,20 +173,17 @@ void HW_Init(void)
     DEBUG_LOG("NVIC for USART3 enabled     [OK]");
     OLED_Refresh_Line("NVIC3");
 
-	if(Ublox_Cfg_Rate(1000,1)!=0)	//设置定位信息更新速度为1000ms,顺便判断GPS模块是否在位. 
-	{
-		while((Ublox_Cfg_Rate(1000,1)!=0)&& key)	//持续判断,直到可以检查到NEO-6M,且数据保存成功，如果时初次上电使用，先用9600波特率再重新配置
-		{
-			USART_BaudRate_Init(9600);//初始化串口2波特率为9600(EEPROM没有保存数据的时候,波特率为9600.)
-
-	  	Ublox_Cfg_Prt(38400);			//重新设置模块的波特率为38400
-			Ublox_Cfg_Tp(1000000,100000,1);	//设置PPS为1秒钟输出1次,脉冲宽度为100ms	    
-			key=Ublox_Cfg_Cfg_Save();		//保存配置  
-		}	  					 
-		delay_ms(500);//等待500ms
-	
-	}	
-    
+    if (Ublox_Cfg_Rate(1000, 1) != 0)   // Set update rate to 1000 ms and check module status
+    {
+        while ((Ublox_Cfg_Rate(1000, 1) != 0) && key)   // Retry until NEO-6M responds and settings save
+        {
+            USART_BaudRate_Init(9600);                  // Init UART2 at 9600 baud (default)
+            Ublox_Cfg_Prt(38400);                       // Change module baud rate to 38400
+            Ublox_Cfg_Tp(1000000, 100000, 1);           // PPS: 1 Hz pulse, 100 ms width
+            key = Ublox_Cfg_Cfg_Save();                 // Save configuration
+        }
+        delay_ms(500);                                  // Wait 500 ms
+    }
 }
 
 void Net_Init(void)
