@@ -5,131 +5,131 @@
 #define USART_MAX_RECV_LEN 1024
  									   						    
 
-//ÎÀÐÇÐÅÏ¢
+//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ï¢
 __packed typedef struct  
 {										    
- 	uint8_t num;		//ÎÀÐÇ±àºÅ
-	uint8_t eledeg;	//ÎÀÐÇÑö½Ç
-	uint16_t azideg;	//ÎÀÐÇ·½Î»½Ç
-	uint8_t sn;		//ÐÅÔë±È		   
+ 	uint8_t num;		//ï¿½ï¿½ï¿½Ç±ï¿½ï¿½
+	uint8_t eledeg;	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	uint16_t azideg;	//ï¿½ï¿½ï¿½Ç·ï¿½Î»ï¿½ï¿½
+	uint8_t sn;		//ï¿½ï¿½ï¿½ï¿½ï¿½		   
 }nmea_slmsg;  
-//UTCÊ±¼äÐÅÏ¢
+//UTCÊ±ï¿½ï¿½ï¿½ï¿½Ï¢
 __packed typedef struct  
 {										    
- 	uint16_t year;	//Äê·Ý
-	uint8_t month;	//ÔÂ·Ý
-	uint8_t date;	//ÈÕÆÚ
+ 	uint16_t year;	//ï¿½ï¿½ï¿½
+	uint8_t month;	//ï¿½Â·ï¿½
+	uint8_t date;	//ï¿½ï¿½ï¿½ï¿½
 	uint8_t hour; 	//Ð¡Ê±
-	uint8_t min; 	//·ÖÖÓ
-	uint8_t sec; 	//ÃëÖÓ
+	uint8_t min; 	//ï¿½ï¿½ï¿½ï¿½
+	uint8_t sec; 	//ï¿½ï¿½ï¿½ï¿½
 }nmea_utc_time;   	   
-//NMEA 0183 Ð­Òé½âÎöºóÊý¾Ý´æ·Å½á¹¹Ìå
+//NMEA 0183 Ð­ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ý´ï¿½Å½á¹¹ï¿½ï¿½
 __packed typedef struct  
 {										    
- 	uint8_t svnum;					//¿É¼ûÎÀÐÇÊý
-	nmea_slmsg slmsg[12];		//×î¶à12¿ÅÎÀÐÇ
-	nmea_utc_time utc;			//UTCÊ±¼ä
-	uint32_t latitude;				//Î³¶È ·ÖÀ©´ó100000±¶,Êµ¼ÊÒª³ýÒÔ100000
-	uint8_t nshemi;					//±±Î³/ÄÏÎ³,N:±±Î³;S:ÄÏÎ³				  
-	uint32_t longitude;			    //¾­¶È ·ÖÀ©´ó100000±¶,Êµ¼ÊÒª³ýÒÔ100000
-	uint8_t ewhemi;					//¶«¾­/Î÷¾­,E:¶«¾­;W:Î÷¾­
-	uint8_t gpssta;					//GPS×´Ì¬:0,Î´¶¨Î»;1,·Ç²î·Ö¶¨Î»;2,²î·Ö¶¨Î»;6,ÕýÔÚ¹ÀËã.				  
- 	uint8_t posslnum;				//ÓÃÓÚ¶¨Î»µÄÎÀÐÇÊý,0~12.
- 	uint8_t possl[12];				//ÓÃÓÚ¶¨Î»µÄÎÀÐÇ±àºÅ
-	uint8_t fixmode;					//¶¨Î»ÀàÐÍ:1,Ã»ÓÐ¶¨Î»;2,2D¶¨Î»;3,3D¶¨Î»
-	uint16_t pdop;					//Î»ÖÃ¾«¶ÈÒò×Ó 0~500,¶ÔÓ¦Êµ¼ÊÖµ0~50.0
-	uint16_t hdop;					//Ë®Æ½¾«¶ÈÒò×Ó 0~500,¶ÔÓ¦Êµ¼ÊÖµ0~50.0
-	uint16_t vdop;					//´¹Ö±¾«¶ÈÒò×Ó 0~500,¶ÔÓ¦Êµ¼ÊÖµ0~50.0 
+ 	uint8_t svnum;					//ï¿½É¼ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	nmea_slmsg slmsg[12];		//ï¿½ï¿½ï¿½12ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	nmea_utc_time utc;			//UTCÊ±ï¿½ï¿½
+	uint32_t latitude;				//Î³ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½100000ï¿½ï¿½,Êµï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½100000
+	uint8_t nshemi;					//ï¿½ï¿½Î³/ï¿½ï¿½Î³,N:ï¿½ï¿½Î³;S:ï¿½ï¿½Î³				  
+	uint32_t longitude;			    //ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½100000ï¿½ï¿½,Êµï¿½ï¿½Òªï¿½ï¿½ï¿½ï¿½100000
+	uint8_t ewhemi;					//ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½,E:ï¿½ï¿½ï¿½ï¿½;W:ï¿½ï¿½ï¿½ï¿½
+	uint8_t gpssta;					//GPS×´Ì¬:0,Î´ï¿½ï¿½Î»;1,ï¿½Ç²ï¿½Ö¶ï¿½Î»;2,ï¿½ï¿½Ö¶ï¿½Î»;6,ï¿½ï¿½ï¿½Ú¹ï¿½ï¿½ï¿½.				  
+ 	uint8_t posslnum;				//ï¿½ï¿½ï¿½Ú¶ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,0~12.
+ 	uint8_t possl[12];				//ï¿½ï¿½ï¿½Ú¶ï¿½Î»ï¿½ï¿½ï¿½ï¿½ï¿½Ç±ï¿½ï¿½
+	uint8_t fixmode;					//ï¿½ï¿½Î»ï¿½ï¿½ï¿½ï¿½:1,Ã»ï¿½Ð¶ï¿½Î»;2,2Dï¿½ï¿½Î»;3,3Dï¿½ï¿½Î»
+	uint16_t pdop;					//Î»ï¿½Ã¾ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 0~500,ï¿½ï¿½Ó¦Êµï¿½ï¿½Öµ0~50.0
+	uint16_t hdop;					//Ë®Æ½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 0~500,ï¿½ï¿½Ó¦Êµï¿½ï¿½Öµ0~50.0
+	uint16_t vdop;					//ï¿½ï¿½Ö±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ 0~500,ï¿½ï¿½Ó¦Êµï¿½ï¿½Öµ0~50.0 
 
-	int altitude;			 	//º£°Î¸ß¶È,·Å´óÁË10±¶,Êµ¼Ê³ýÒÔ10.µ¥Î»:0.1m	 
-	uint16_t speed;					//µØÃæËÙÂÊ,·Å´óÁË1000±¶,Êµ¼Ê³ýÒÔ10.µ¥Î»:0.001¹«Àï/Ð¡Ê±	 
+	int altitude;			 	//ï¿½ï¿½ï¿½Î¸ß¶ï¿½,ï¿½Å´ï¿½ï¿½ï¿½10ï¿½ï¿½,Êµï¿½Ê³ï¿½ï¿½ï¿½10.ï¿½ï¿½Î»:0.1m	 
+	uint16_t speed;					//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½Å´ï¿½ï¿½ï¿½1000ï¿½ï¿½,Êµï¿½Ê³ï¿½ï¿½ï¿½10.ï¿½ï¿½Î»:0.001ï¿½ï¿½ï¿½ï¿½/Ð¡Ê±	 
 }nmea_msg; 
 //////////////////////////////////////////////////////////////////////////////////////////////////// 	
-//UBLOX NEO-6M ÅäÖÃ(Çå³ý,±£´æ,¼ÓÔØµÈ)½á¹¹Ìå
+//UBLOX NEO-6M ï¿½ï¿½ï¿½ï¿½(ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½Øµï¿½)ï¿½á¹¹ï¿½ï¿½
 __packed typedef struct  
 {										    
- 	uint16_t header;					//cfg header,¹Ì¶¨Îª0X62B5(Ð¡¶ËÄ£Ê½)
-	uint16_t id;						//CFG CFG ID:0X0906 (Ð¡¶ËÄ£Ê½)
-	uint16_t dlength;				//Êý¾Ý³¤¶È 12/13
-	uint32_t clearmask;				//×ÓÇøÓòÇå³ýÑÚÂë(1ÓÐÐ§)
-	uint32_t savemask;				//×ÓÇøÓò±£´æÑÚÂë
-	uint32_t loadmask;				//×ÓÇøÓò¼ÓÔØÑÚÂë
-	uint8_t  devicemask; 		  	//Ä¿±êÆ÷¼þÑ¡ÔñÑÚÂë	b0:BK RAM;b1:FLASH;b2,EEPROM;b4,SPI FLASH
-	uint8_t  cka;		 			//Ð£ÑéCK_A 							 	 
-	uint8_t  ckb;			 		//Ð£ÑéCK_B							 	 
+ 	uint16_t header;					//cfg header,ï¿½Ì¶ï¿½Îª0X62B5(Ð¡ï¿½ï¿½Ä£Ê½)
+	uint16_t id;						//CFG CFG ID:0X0906 (Ð¡ï¿½ï¿½Ä£Ê½)
+	uint16_t dlength;				//ï¿½ï¿½ï¿½Ý³ï¿½ï¿½ï¿½ 12/13
+	uint32_t clearmask;				//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½(1ï¿½ï¿½Ð§)
+	uint32_t savemask;				//ï¿½ï¿½ï¿½ï¿½ï¿½ò±£´ï¿½ï¿½ï¿½ï¿½ï¿½
+	uint32_t loadmask;				//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+	uint8_t  devicemask; 		  	//Ä¿ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ñ¡ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½	b0:BK RAM;b1:FLASH;b2,EEPROM;b4,SPI FLASH
+	uint8_t  cka;		 			//Ð£ï¿½ï¿½CK_A 							 	 
+	uint8_t  ckb;			 		//Ð£ï¿½ï¿½CK_B							 	 
 }_ublox_cfg_cfg; 
 
-//UBLOX NEO-6M ÏûÏ¢ÉèÖÃ½á¹¹Ìå
+//UBLOX NEO-6M ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½Ã½á¹¹ï¿½ï¿½
 __packed typedef struct  
 {										    
- 	uint16_t header;					//cfg header,¹Ì¶¨Îª0X62B5(Ð¡¶ËÄ£Ê½)
-	uint16_t id;						//CFG MSG ID:0X0106 (Ð¡¶ËÄ£Ê½)
-	uint16_t dlength;				//Êý¾Ý³¤¶È 8
-	uint8_t  msgclass;				//ÏûÏ¢ÀàÐÍ(F0 ´ú±íNMEAÏûÏ¢¸ñÊ½)
-	uint8_t  msgid;					//ÏûÏ¢ ID 
+ 	uint16_t header;					//cfg header,ï¿½Ì¶ï¿½Îª0X62B5(Ð¡ï¿½ï¿½Ä£Ê½)
+	uint16_t id;						//CFG MSG ID:0X0106 (Ð¡ï¿½ï¿½Ä£Ê½)
+	uint16_t dlength;				//ï¿½ï¿½ï¿½Ý³ï¿½ï¿½ï¿½ 8
+	uint8_t  msgclass;				//ï¿½ï¿½Ï¢ï¿½ï¿½ï¿½ï¿½(F0 ï¿½ï¿½ï¿½ï¿½NMEAï¿½ï¿½Ï¢ï¿½ï¿½Ê½)
+	uint8_t  msgid;					//ï¿½ï¿½Ï¢ ID 
 								//00,GPGGA;01,GPGLL;02,GPGSA;
 								//03,GPGSV;04,GPRMC;05,GPVTG;
 								//06,GPGRS;07,GPGST;08,GPZDA;
 								//09,GPGBS;0A,GPDTM;0D,GPGNS;
-	uint8_t  iicset;					//IICÏûÊä³öÉèÖÃ    0,¹Ø±Õ;1,Ê¹ÄÜ.
-	uint8_t  uart1set;				//UART1Êä³öÉèÖÃ	   0,¹Ø±Õ;1,Ê¹ÄÜ.
-	uint8_t  uart2set;				//UART2Êä³öÉèÖÃ	   0,¹Ø±Õ;1,Ê¹ÄÜ.
-	uint8_t  usbset;					//USBÊä³öÉèÖÃ	   0,¹Ø±Õ;1,Ê¹ÄÜ.
-	uint8_t  spiset;					//SPIÊä³öÉèÖÃ	   0,¹Ø±Õ;1,Ê¹ÄÜ.
-	uint8_t  ncset;					//Î´ÖªÊä³öÉèÖÃ	   Ä¬ÈÏÎª1¼´¿É.
- 	uint8_t  cka;			 		//Ð£ÑéCK_A 							 	 
-	uint8_t  ckb;			    	//Ð£ÑéCK_B							 	 
+	uint8_t  iicset;					//IICï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½    0,ï¿½Ø±ï¿½;1,Ê¹ï¿½ï¿½.
+	uint8_t  uart1set;				//UART1ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½	   0,ï¿½Ø±ï¿½;1,Ê¹ï¿½ï¿½.
+	uint8_t  uart2set;				//UART2ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½	   0,ï¿½Ø±ï¿½;1,Ê¹ï¿½ï¿½.
+	uint8_t  usbset;					//USBï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½	   0,ï¿½Ø±ï¿½;1,Ê¹ï¿½ï¿½.
+	uint8_t  spiset;					//SPIï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½	   0,ï¿½Ø±ï¿½;1,Ê¹ï¿½ï¿½.
+	uint8_t  ncset;					//Î´Öªï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½	   Ä¬ï¿½ï¿½Îª1ï¿½ï¿½ï¿½ï¿½.
+ 	uint8_t  cka;			 		//Ð£ï¿½ï¿½CK_A 							 	 
+	uint8_t  ckb;			    	//Ð£ï¿½ï¿½CK_B							 	 
 }_ublox_cfg_msg; 
 
-//UBLOX NEO-6M UART¶Ë¿ÚÉèÖÃ½á¹¹Ìå
+//UBLOX NEO-6M UARTï¿½Ë¿ï¿½ï¿½ï¿½ï¿½Ã½á¹¹ï¿½ï¿½
 __packed typedef struct  
 {										    
- 	uint16_t header;					//cfg header,¹Ì¶¨Îª0X62B5(Ð¡¶ËÄ£Ê½)
-	uint16_t id;						//CFG PRT ID:0X0006 (Ð¡¶ËÄ£Ê½)
-	uint16_t dlength;				//Êý¾Ý³¤¶È 20
-	uint8_t  portid;					//¶Ë¿ÚºÅ,0=IIC;1=UART1;2=UART2;3=USB;4=SPI;
-	uint8_t  reserved;				//±£Áô,ÉèÖÃÎª0
-	uint16_t txready;				//TX ReadyÒý½ÅÉèÖÃ,Ä¬ÈÏÎª0
-	uint32_t mode;					//´®¿Ú¹¤×÷Ä£Ê½ÉèÖÃ,ÆæÅ¼Ð£Ñé,Í£Ö¹Î»,×Ö½Ú³¤¶ÈµÈµÄÉèÖÃ.
- 	uint32_t baudrate;				//²¨ÌØÂÊÉèÖÃ
- 	uint16_t inprotomask;		 	//ÊäÈëÐ­Òé¼¤»îÆÁ±ÎÎ»  Ä¬ÈÏÉèÖÃÎª0X07 0X00¼´¿É.
- 	uint16_t outprotomask;		 	//Êä³öÐ­Òé¼¤»îÆÁ±ÎÎ»  Ä¬ÈÏÉèÖÃÎª0X07 0X00¼´¿É.
- 	uint16_t reserved4; 				//±£Áô,ÉèÖÃÎª0
- 	uint16_t reserved5; 				//±£Áô,ÉèÖÃÎª0 
- 	uint8_t  cka;			 		//Ð£ÑéCK_A 							 	 
-	uint8_t  ckb;			    	//Ð£ÑéCK_B							 	 
+ 	uint16_t header;					//cfg header,ï¿½Ì¶ï¿½Îª0X62B5(Ð¡ï¿½ï¿½Ä£Ê½)
+	uint16_t id;						//CFG PRT ID:0X0006 (Ð¡ï¿½ï¿½Ä£Ê½)
+	uint16_t dlength;				//ï¿½ï¿½ï¿½Ý³ï¿½ï¿½ï¿½ 20
+	uint8_t  portid;					//ï¿½Ë¿Úºï¿½,0=IIC;1=UART1;2=UART2;3=USB;4=SPI;
+	uint8_t  reserved;				//ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½Îª0
+	uint16_t txready;				//TX Readyï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,Ä¬ï¿½ï¿½Îª0
+	uint32_t mode;					//ï¿½ï¿½ï¿½Ú¹ï¿½ï¿½ï¿½Ä£Ê½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½Å¼Ð£ï¿½ï¿½,Í£Ö¹Î»,ï¿½Ö½Ú³ï¿½ï¿½ÈµÈµï¿½ï¿½ï¿½ï¿½ï¿½.
+ 	uint32_t baudrate;				//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+ 	uint16_t inprotomask;		 	//ï¿½ï¿½ï¿½ï¿½Ð­ï¿½é¼¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»  Ä¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª0X07 0X00ï¿½ï¿½ï¿½ï¿½.
+ 	uint16_t outprotomask;		 	//ï¿½ï¿½ï¿½Ð­ï¿½é¼¤ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»  Ä¬ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Îª0X07 0X00ï¿½ï¿½ï¿½ï¿½.
+ 	uint16_t reserved4; 				//ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½Îª0
+ 	uint16_t reserved5; 				//ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½ï¿½ï¿½Îª0 
+ 	uint8_t  cka;			 		//Ð£ï¿½ï¿½CK_A 							 	 
+	uint8_t  ckb;			    	//Ð£ï¿½ï¿½CK_B							 	 
 }_ublox_cfg_prt; 
 
-//UBLOX NEO-6M Ê±ÖÓÂö³åÅäÖÃ½á¹¹Ìå
+//UBLOX NEO-6M Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã½á¹¹ï¿½ï¿½
 __packed typedef struct  
 {										    
- 	uint16_t header;					//cfg header,¹Ì¶¨Îª0X62B5(Ð¡¶ËÄ£Ê½)
-	uint16_t id;						//CFG TP ID:0X0706 (Ð¡¶ËÄ£Ê½)
-	uint16_t dlength;				//Êý¾Ý³¤¶È
-	uint32_t interval;				//Ê±ÖÓÂö³å¼ä¸ô,µ¥Î»Îªus
-	uint32_t length;				 	//Âö³å¿í¶È,µ¥Î»Îªus
-	signed char status;			//Ê±ÖÓÂö³åÅäÖÃ:1,¸ßµçÆ½ÓÐÐ§;0,¹Ø±Õ;-1,µÍµçÆ½ÓÐÐ§.			  
-	uint8_t timeref;			   		//²Î¿¼Ê±¼ä:0,UTCÊ±¼ä;1,GPSÊ±¼ä;2,µ±µØÊ±¼ä.
-	uint8_t flags;					//Ê±¼äÂö³åÉèÖÃ±êÖ¾
-	uint8_t reserved;				//±£Áô			  
- 	signed short antdelay;	 	//ÌìÏßÑÓÊ±
- 	signed short rfdelay;		//RFÑÓÊ±
-	signed int userdelay; 	 	//ÓÃ»§ÑÓÊ±	
-	uint8_t cka;						//Ð£ÑéCK_A 							 	 
-	uint8_t ckb;						//Ð£ÑéCK_B							 	 
+ 	uint16_t header;					//cfg header,ï¿½Ì¶ï¿½Îª0X62B5(Ð¡ï¿½ï¿½Ä£Ê½)
+	uint16_t id;						//CFG TP ID:0X0706 (Ð¡ï¿½ï¿½Ä£Ê½)
+	uint16_t dlength;				//ï¿½ï¿½ï¿½Ý³ï¿½ï¿½ï¿½
+	uint32_t interval;				//Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½Î»Îªus
+	uint32_t length;				 	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½,ï¿½ï¿½Î»Îªus
+	signed char status;			//Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½:1,ï¿½ßµï¿½Æ½ï¿½ï¿½Ð§;0,ï¿½Ø±ï¿½;-1,ï¿½Íµï¿½Æ½ï¿½ï¿½Ð§.			  
+	uint8_t timeref;			   		//ï¿½Î¿ï¿½Ê±ï¿½ï¿½:0,UTCÊ±ï¿½ï¿½;1,GPSÊ±ï¿½ï¿½;2,ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½.
+	uint8_t flags;					//Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã±ï¿½Ö¾
+	uint8_t reserved;				//ï¿½ï¿½ï¿½ï¿½			  
+ 	signed short antdelay;	 	//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê±
+ 	signed short rfdelay;		//RFï¿½ï¿½Ê±
+	signed int userdelay; 	 	//ï¿½Ã»ï¿½ï¿½ï¿½Ê±	
+	uint8_t cka;						//Ð£ï¿½ï¿½CK_A 							 	 
+	uint8_t ckb;						//Ð£ï¿½ï¿½CK_B							 	 
 }_ublox_cfg_tp; 
 
-//UBLOX NEO-6M Ë¢ÐÂËÙÂÊÅäÖÃ½á¹¹Ìå
+//UBLOX NEO-6M Ë¢ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ã½á¹¹ï¿½ï¿½
 __packed typedef struct  
 {										    
- 	uint16_t header;					//cfg header,¹Ì¶¨Îª0X62B5(Ð¡¶ËÄ£Ê½)
-	uint16_t id;						//CFG RATE ID:0X0806 (Ð¡¶ËÄ£Ê½)
-	uint16_t dlength;				//Êý¾Ý³¤¶È
-	uint16_t measrate;				//²âÁ¿Ê±¼ä¼ä¸ô£¬µ¥Î»Îªms£¬×îÉÙ²»ÄÜÐ¡ÓÚ200ms£¨5Hz£©
-	uint16_t navrate;				//µ¼º½ËÙÂÊ£¨ÖÜÆÚ£©£¬¹Ì¶¨Îª1
-	uint16_t timeref;				//²Î¿¼Ê±¼ä£º0=UTC Time£»1=GPS Time£»
- 	uint8_t  cka;					//Ð£ÑéCK_A 							 	 
-	uint8_t  ckb;					//Ð£ÑéCK_B							 	 
+ 	uint16_t header;					//cfg header,ï¿½Ì¶ï¿½Îª0X62B5(Ð¡ï¿½ï¿½Ä£Ê½)
+	uint16_t id;						//CFG RATE ID:0X0806 (Ð¡ï¿½ï¿½Ä£Ê½)
+	uint16_t dlength;				//ï¿½ï¿½ï¿½Ý³ï¿½ï¿½ï¿½
+	uint16_t measrate;				//ï¿½ï¿½ï¿½ï¿½Ê±ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Î»Îªmsï¿½ï¿½ï¿½ï¿½ï¿½Ù²ï¿½ï¿½ï¿½Ð¡ï¿½ï¿½200msï¿½ï¿½5Hzï¿½ï¿½
+	uint16_t navrate;				//ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ê£ï¿½ï¿½ï¿½ï¿½Ú£ï¿½ï¿½ï¿½ï¿½Ì¶ï¿½Îª1
+	uint16_t timeref;				//ï¿½Î¿ï¿½Ê±ï¿½ä£º0=UTC Timeï¿½ï¿½1=GPS Timeï¿½ï¿½
+ 	uint8_t  cka;					//Ð£ï¿½ï¿½CK_A 							 	 
+	uint8_t  ckb;					//Ð£ï¿½ï¿½CK_B							 	 
 }_ublox_cfg_rate; 
 				 
 int NMEA_Str2num(uint8_t *buf,uint8_t*dx);
@@ -140,6 +140,7 @@ void NMEA_GPGSA_Analysis(nmea_msg *gpsx,uint8_t *buf);
 void NMEA_GPGSA_Analysis(nmea_msg *gpsx,uint8_t *buf);
 void NMEA_GPRMC_Analysis(nmea_msg *gpsx,uint8_t *buf);
 void NMEA_GPVTG_Analysis(nmea_msg *gpsx,uint8_t *buf);
+void GpsDataRead(void);
 uint8_t Ublox_Cfg_Cfg_Save(void);
 uint8_t Ublox_Cfg_Msg(uint8_t msgid,uint8_t uart1set);
 uint8_t Ublox_Cfg_Prt(uint32_t baudrate);

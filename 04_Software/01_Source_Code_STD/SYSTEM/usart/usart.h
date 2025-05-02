@@ -5,7 +5,7 @@
 #include "stm32f10x.h"
 
 
-#define USART_DEBUG		USART1		//调试打印所使用的串口组
+#define USART_DEBUG		USART1		//锟斤拷锟皆达拷印锟斤拷使锟矫的达拷锟斤拷锟斤拷
 
 
 void Usart1_Init(unsigned int baud);
@@ -17,5 +17,10 @@ void Usart_SendString(USART_TypeDef *USARTx, unsigned char *str, unsigned short 
 void UsartPrintf(USART_TypeDef *USARTx, char *fmt,...);
 
 void DEBUG_LOG(char *fmt,...);
+
+void GPIO_Config_Init(void);
+void USART_BaudRate_Init(uint32_t Data);
+void USART_Config_Init(void);
+void NVIC_Configuration(void);
 
 #endif

@@ -346,6 +346,7 @@
       font-size: 18px;
       margin-top: 5px;
       display: block;
+      white-space: pre-line;   /* 新增：允许在 span 中用 <br> 强制换行 */
     }
 
     .control-container {
@@ -720,6 +721,15 @@
       });
     }
 
+    // ---------- 新增：将十进制度转 DMS（度分秒）格式 ----------
+    function convertToDMS(dec) {
+      const deg = Math.floor(dec);
+      const minFloat = (dec - deg) * 60;
+      const min = Math.floor(minFloat);
+      const sec = (minFloat - min) * 60;
+      return `${deg}°${min}'${sec.toFixed(3)}"`;
+    }
+
     // 更新监控数据和控制面板状态显示
     function updateMonitoringData(data) {
       const prevDanger = dangerValue.textContent === '是';
@@ -750,9 +760,28 @@
       if (data.light !== undefined) {
         lightStatusValue.textContent = data.light === 'on' ? '开启' : '关闭';
       }
-      if (data.latitude !== undefined && data.longitude !== undefined) {
-        locationValue.textContent = `Lat: ${data.latitude}, Lng: ${data.longitude}`;
+      // if (data.latitude !== undefined && data.longitude !== undefined) {
+      //   locationValue.textContent = `Lat: ${data.latitude}, Lng: ${data.longitude}`;
+      // }
+      
+      // 在 updateMonitoringData 函数内，替换原有 locationValue 设置为：
+      if (
+        data.latitude !== undefined &&
+        data.longitude !== undefined &&
+        data.latitudeHem !== undefined &&
+        data.longitudeHem !== undefined
+      ) {
+        // 根据半球决定中文标签
+        const lonLabel = data.longitudeHem === 'E' ? '东经' : '西经';
+        const latLabel = data.latitudeHem  === 'N' ? '北纬' : '南纬';
+        // 转成 DMS
+        const lonDMS = convertToDMS(data.longitude);
+        const latDMS = convertToDMS(data.latitude);
+        // 用 innerHTML 插入两行
+        document.getElementById('locationValue').innerHTML =
+          `${lonLabel} ${lonDMS}<br>${latLabel} ${latDMS}`;
       }
+
       if (data.light !== undefined) {
         document.getElementById('displayLightStatus').textContent = "照明状态: " + (data.light === 'on' ? '开启' : '关闭');
       }

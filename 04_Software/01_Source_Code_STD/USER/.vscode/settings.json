@@ -1,6 +1,10 @@
 {
     "files.associations": {
         "timer.h": "c",
-        "beep.h": "c"
+        "beep.h": "c",
+        "gps.h": "c",
+        "main.h": "c",
+        "usart.h": "c",
+        "delay.h": "c"
     }
 }

@@ -26,8 +26,5 @@
 #include "mq2.h"
 
 
-#define Version_Rollback
-
-
 #endif
 
