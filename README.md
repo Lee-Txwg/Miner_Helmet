@@ -60,23 +60,4 @@ find ./ -type d -empty -not -path "./.git/*" -exec touch {}/.gitkeep \;
 
 Graduation project
 
->>>>>>> 98775b565307c4fb8832f1c323ea3e0308d5643d
->>>>>>>
->>>>>>>
->>>>>>
->>>>>
->>>>
->>>
->>
 
-# Miner_Helmet
-
-Graduation project
-
->>>>>>> 98775b565307c4fb8832f1c323ea3e0308d5643d
->>>>>>>
->>>>>>
->>>>>
->>>>
->>>
->>
