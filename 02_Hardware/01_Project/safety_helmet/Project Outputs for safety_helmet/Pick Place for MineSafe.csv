@@ -1,0 +1,45 @@
+Altium Designer Pick and Place Locations
+C:\Users\50572\Desktop\MineSafe\02_Hardware\01_Project\safety_helmet\Project Outputs for safety_helmet\Pick Place for MineSafe.csv
+
+========================================================================================================================
+File Design Information:
+
+Date:       14/05/25
+Time:       16:36
+Revision:   5a4b52eb33bbefd744234bef900818d611c5c1af
+Variant:    No variations
+Units used: mm
+
+"Designator","Comment","Layer","Footprint","Center-X(mm)","Center-Y(mm)","Rotation","Description"
+"SW1","TS-1187A-C-D-B","TopLayer","KEY-SMD_4P-L5.2-W5.2-P3.7-LS6.4-TL","42.2910","60.0710","0",""
+"Q2","","TopLayer","S8050_SOT-23","39.2430","51.9865","0",""
+"Q1","","TopLayer","S8050_SOT-23","40.0050","67.3535","0",""
+"D1","SS14","TopLayer","SMA_L4.2-W2.6-LS5.3-RD","71.6280","28.4480","180",""
+"U6","MCU_MHDR","TopLayer","STM32F103C8T6-BLUEPILL","61.2140","67.0560","0",""
+"R9","510次","TopLayer","R0603","40.5130","77.9780","90",""
+"J2","BIGLED","TopLayer","HDR-M-2.54_1X2","34.6710","78.1050","0",""
+"U3","DHT11-Module","TopLayer","HDR-F-2.54_1X3","95.5040","46.1010","180",""
+"R5","10k次","TopLayer","R0603","36.9570","94.9960","270",""
+"R4","10K","TopLayer","R0603_SMD-CRCW060327R0FKEA","43.8150","52.0700","90",""
+"R2","1K","TopLayer","R0603_SMD-CRCW060327R0FKEA","47.1170","52.0700","90",""
+"BUZ2","HNB09A03 3.3V","TopLayer","BUZ-TH_BD9.0-P5.00-D0.6-FD","32.5118","51.8160","0",""
+"USB1","TYPEC-304A-ACP16L","TopLayer","USB-C-SMD_XUNPU_TYPEC-304A-ACP16L","60.8330","30.6070","0",""
+"U5","CH340C","TopLayer","SOP-16_L10.0-W3.9-P1.27-LS6.0-BL","82.5500","42.5450","90",""
+"U4","AMS1117-3.3","TopLayer","SOT-223-3_L6.5-W3.4-P2.30-LS7.0-BR","81.1530","29.5910","180",""
+"R8","5.1k次","TopLayer","R0603","52.7050","27.4406","90",""
+"R7","510次","TopLayer","R0603","93.4720","36.9570","270",""
+"R6","5.1k次","TopLayer","R0603","50.2920","27.4406","270",""
+"LED1","FC-2012HRK-620D","TopLayer","LED0805-RD_RED","98.0440","36.9570","90",""
+"J1","Debugging port","TopLayer","HDR-M-2.54_1X2","98.9330","28.5750","180",""
+"C1","100nF","TopLayer","C0603","74.5490","34.8600","270",""
+"C5","100nF","TopLayer","C0603","92.4560","28.8290","90",""
+"C4","10uF","TopLayer","C0603","88.7730","28.8290","90",""
+"C3","100nF","TopLayer","C0603","71.3740","34.8600","270",""
+"C2","10uF","TopLayer","C0603","68.0720","34.8600","270",""
+"R3","10K","TopLayer","R0603_SMD-CRCW060327R0FKEA","44.1960","67.4370","90",""
+"R1","1K","TopLayer","R0603_SMD-CRCW060327R0FKEA","47.4980","67.4370","90",""
+"BUZ1","HNB09A03 3.3V","TopLayer","BUZ-TH_BD9.0-P5.00-D0.6-FD","32.0440","67.4370","0",""
+"U2","ESP8266-01S","TopLayer","WIFIM-TH_ESP8266-01S","33.4010","123.8250","180",""
+"U7","NEO-6M","TopLayer","TH_ATK-NEO-6M","88.3920","87.2490","90",""
+"1","MQ2","TopLayer","mq2","92.4360","123.4440","270",""
+"U1","OLED","TopLayer","0.96oled","56.7690","125.0950","0",""

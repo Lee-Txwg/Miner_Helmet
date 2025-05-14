@@ -273,9 +273,27 @@ void Comm_Handler(unsigned short *tick)
     float lat = gpsx.latitude  / 100000.0f;
     char  ew_hemi = gpsx.ewhemi;   // 'E' or 'W'
     char  ns_hemi = gpsx.nshemi;   // 'N' or 'S'
+	  
+	  // Check if GPS data is valid
+    if (gpsx.longitude != 0 && gpsx.latitude != 0) {
+        // Convert raw GPS data to floating-point degrees
+        lon = gpsx.longitude / 100000.0f;
+        lat = gpsx.latitude / 100000.0f;
+        ew_hemi = gpsx.ewhemi;  // 'E' or 'W'
+        ns_hemi = gpsx.nshemi;  // 'N' or 'S'
+    } 
+		else
+		{
+        // If GPS data is invalid, use default values
+        printf("GPS data is invalid, using default values.\r\n");
+        lon = 0.0f;
+        lat = 0.0f;
+        ew_hemi = 'E';
+        ns_hemi = 'N';
+    }
 
     /*----------------- 1. Communication Timing -----------------*/
-    if (100 <= ++(*tick))
+    if (119 <= ++(*tick))
     {
         /*--> [1.1] Read LED status */
         Led_Status = GPIO_ReadInputDataBit(GPIOA, GPIO_Pin_4);

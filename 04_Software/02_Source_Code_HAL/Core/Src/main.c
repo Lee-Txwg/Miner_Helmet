@@ -92,6 +92,7 @@ int main(void)
   /* USER CODE BEGIN 2 */
   uint8_t t = 0, h = 0;
   DHT11_Send();
+	printf("=========================\r\n");
   while (Is_DHT11_ACK())
   {
     printf("error\r\n");
