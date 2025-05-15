@@ -1,0 +1,21 @@
+----------------------------------------------------------------------------------------------------------------------------------
+NCDrill File Report For: MineSafe.PcbDoc   2025/5/15,ÐÇÆÚËÄ  6:02:39
+----------------------------------------------------------------------------------------------------------------------------------
+
+Layer Pair : Top Layer to Bottom Layer
+ASCII RoundHoles File : MineSafe-RoundHoles.TXT
+ASCII SlotHoles File : MineSafe-SlotHoles.TXT
+
+Tool       Hole Size               Hole Tolerance               Hole Type       Hole Count   Plated         Tool Travel
+----------------------------------------------------------------------------------------------------------------------------------
+T1      24mil (0.6mm)                                             Round             12        PTH        3.80inch (96.54mm)
+T2      24mil (0.6mm)                                             Slot              4         PTH        1.50inch (38.17mm)
+T3      28mil (0.711mm)                                           Round             1         PTH        0.00inch (0.00mm)
+T4      32mil (0.8mm)                                             Round             43        PTH        7.08inch (179.84mm)
+T5      35mil (0.889mm)                                           Round             8         PTH        0.98inch (24.96mm)
+T6      39mil (1mm)                                               Round             4         PTH        1.99inch (50.65mm)
+T7      43mil (1.1mm)                                             Round             4         PTH        2.68inch (67.95mm)
+----------------------------------------------------------------------------------------------------------------------------------
+Totals                                                                              76
+
+Total Processing Time (hh:mm:ss) : 00:00:00

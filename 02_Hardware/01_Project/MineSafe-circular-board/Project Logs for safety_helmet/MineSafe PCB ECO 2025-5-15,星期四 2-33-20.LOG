@@ -1,0 +1,4 @@
+Change Component Footprint: Designator=U7 Old Footprint=TH_ATK-NEO-6M New Footprint=MHDR1X4
+Added Member To Class: ClassName=MineSafe Member=Component U1 MQ2
+Added Member To Class: ClassName=MineSafe Member=Component U3 DHT11-Module
+Added Member To Class: ClassName=MineSafe Member=Component U5 CH340C

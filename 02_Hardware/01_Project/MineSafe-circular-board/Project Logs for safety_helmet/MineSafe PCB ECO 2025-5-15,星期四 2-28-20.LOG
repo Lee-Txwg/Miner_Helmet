@@ -1,0 +1,4 @@
+Change Component Footprint: Designator=U1 Old Footprint=0.96oled New Footprint=MHDR1X4
+Added Member To Class: ClassName=MineSafe Member=Component U2 DHT11-Module
+Added Member To Class: ClassName=MineSafe Member=Component U4 CH340C
+Added Member To Class: ClassName=MineSafe Member=Component U6 NEO-6M

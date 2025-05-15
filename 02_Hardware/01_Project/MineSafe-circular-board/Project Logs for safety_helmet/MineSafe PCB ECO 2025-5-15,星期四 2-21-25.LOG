@@ -1,0 +1,30 @@
+Removed Pin From Net: NetName=VCC Pin=U2-1
+Removed Pin From Net: NetName=PB8 Pin=U2-2
+Removed Pin From Net: NetName=PA3 Pin=U2-4
+Removed Pin From Net: NetName=GND Pin=U2-5
+Removed Pin From Net: NetName=PA2 Pin=U2-8
+Removed Member From Class: ClassName=MineSafe Member=U7
+Change Component Designator: OldDesignator=U3 NewDesignator=U2
+Change Component Designator: OldDesignator=U4 NewDesignator=U3
+Change Component Designator: OldDesignator=U5 NewDesignator=U4
+Change Component Designator: OldDesignator=U6 NewDesignator=U5
+Change Component Designator: OldDesignator=U7 NewDesignator=U6
+Added Component: Designator=H1(HDR-F-2.54_2X4)
+Add component (AddParameter): Name = "Add into BOM"; Value = "yes"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Contributor"; Value = "LCEDA_Lib"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Convert to PCB"; Value = "yes"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Device"; Value = "HDR-F-2.54_2x4"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer Part"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Origin Footprint"; Value = "HDR-F-2.54_2X4"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "spicePre"; Value = "H"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "spiceSymbolName"; Value = "HDR-F-2.54_2x4"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "LCSC"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier Part"; Value = "C239344"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Symbol"; Value = "HDR-F-2.54_2x4"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=PA3 Pin=H1-1
+Added Pin To Net: NetName=GND Pin=H1-2
+Added Pin To Net: NetName=PB8 Pin=H1-5
+Added Pin To Net: NetName=VCC Pin=H1-7
+Added Pin To Net: NetName=PA2 Pin=H1-8
+Added Member To Class: ClassName=MineSafe Member=Component H1 ESP-01S
