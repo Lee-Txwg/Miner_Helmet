@@ -1,7 +1,7 @@
 Protel Design System Design Rule Check
-PCB File : C:\Users\50572\Desktop\MineSafe\02_Hardware\01_Project\TEST\MineSafe-circular-board\ForJLC\MineSafe.PcbDoc
+PCB File : C:\Users\50572\Desktop\MineSafe\02_Hardware\01_Project\MineSafe-circular-board\ForJLC\MineSafe.PcbDoc
 Date     : 2025/5/15,ÐÇÆÚËÄ
-Time     : 13:19:59
+Time     : 15:29:38
 
 Processing Rule : Clearance Constraint (Gap=0mil) (WithinRoom('RoomDefinition_2')),(All)
 Rule Violations :0

@@ -1,7 +1,0 @@
-Change Component Footprint: Designator=U2 Old Footprint=HDR-F-2.54_2X4 New Footprint=MHDR2X4
-Change Pin Designator/Name:  Old Designator=U2-8 Old Name=VCC New Designator =VCC New Name=8
-Change Pin Designator/Name:  Old Designator=U2-7 Old Name=RST New Designator =RST New Name=7
-Change Pin Designator/Name:  Old Designator=U2-5 Old Name=TXD New Designator =TXD New Name=5
-Change Pin Designator/Name:  Old Designator=U2-1 Old Name=GND New Designator =GND New Name=1
-Change Pin Designator/Name:  Old Designator=U2-7 Old Name=RST New Designator =IO2 New Name=2
-Change Pin Designator/Name:  Old Designator=U2-4 Old Name=RXD New Designator =RXD New Name=4
