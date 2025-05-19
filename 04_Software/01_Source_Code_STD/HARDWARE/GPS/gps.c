@@ -439,8 +439,7 @@ void Gps_PrintToSerial(void)
     {
         uint8_t hour = gpsx.utc.hour + 8;
         if (hour >= 24) hour -= 24;
-        printf("Time (CST): %02d:%02d:%02d\r\n\r\n",
-               hour, gpsx.utc.min, gpsx.utc.sec);
+        printf("Time (CST): %02d:%02d:%02d\r\n\r\n",hour, gpsx.utc.min, gpsx.utc.sec);
     }
 }
 // ====== Serial Print Extension End ======
@@ -455,7 +454,7 @@ void GpsDataRead(void)
 			USART3_TX_BUF[i]=0;			//�Զ����ӽ�����
 			GPS_Analysis(&gpsx,(uint8_t*)USART3_TX_BUF);//�����ַ��������ݴ���GPS�ṹ��
 			//Gps_Msg_Show();				//��ʾ��γ�ȣ�ʱ����Ϣ	
-			Gps_PrintToSerial();
+			//Gps_PrintToSerial();
 		}
 }
 

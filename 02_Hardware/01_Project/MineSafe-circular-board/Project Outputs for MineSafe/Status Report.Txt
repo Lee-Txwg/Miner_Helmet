@@ -1,10 +1,13 @@
-Output: Generates pick and place files
-Type  : Pick Place
-From  : Variant [[No Variations]] of Project [MineSafe.PrjPcb]
-   Generated File[Pick Place for MineSafe.csv]
+Output: NC Drill Files
+Type  : NC Drill
+From  : Project [MineSafe.PrjPcb]
+   Generated File[MineSafe-RoundHoles.TXT]
+   Generated File[MineSafe-SlotHoles.TXT]
+   Generated File[MineSafe.LDP]
+   Generated File[MineSafe.DRR]
 
 
-Files Generated   : 1
+Files Generated   : 4
 Documents Printed : 0
 
-Finished Output Generation At 15:32:28 On 2025/5/15,星期四
+Finished Output Generation At 0:49:33 On 2025/5/20,星期二

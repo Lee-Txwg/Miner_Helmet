@@ -184,7 +184,7 @@ void OneNet_Publish(const char *topic, const char *msg)
 
     MQTT_PACKET_STRUCTURE mqttPacket = {NULL, 0, 0, 0}; // Э���
 
-    DEBUG_LOG("Publish Topic: %s, Msg: %s\r\n", topic, msg);
+    //DEBUG_LOG("Publish Topic: %s, Msg: %s\r\n", topic, msg);
 
     if (MQTT_PacketPublish(MQTT_PUBLISH_ID, topic, msg, strlen(msg), MQTT_QOS_LEVEL0, 0, 1, &mqttPacket) == 0)
     {
@@ -408,12 +408,12 @@ void OneNet_RevPro(unsigned char *cmd)
                 {
                     if (strcmp(tmp->valuestring, "activate") == 0)
                     {
-                        BEEP_remote = 0;
+                        BEEP_remote = 1;
                         DEBUG_LOG("Remote Warning ACTIVATED\r\n");
                     }
                     else if (strcmp(tmp->valuestring, "deactivate") == 0)
                     {
-                        BEEP_remote = 1;
+                        BEEP_remote = 0;
                         DEBUG_LOG("Remote Warning DEACTIVATED\r\n");
                     }
                 }

@@ -65,15 +65,18 @@ void TIM3_IRQHandler(void)   // TIM3 interrupt handler
     if (TIM_GetITStatus(TIM3, TIM_IT_Update) != RESET) // Check if the specified TIM interrupt occurred: TIM update interrupt
     {
         TIM_ClearITPendingBit(TIM3, TIM_IT_Update);  // Clear TIMx interrupt pending bit: TIM update interrupt
+        
         if (alarmFlag) // If alarmFlag is set, toggle LED and BEEP
         {
-            LED1 = !LED1;
-            BEEP = !BEEP;
+//            LED1 = !LED1;
+//            BEEP = !BEEP;
+             LED1 = 0;
+             BEEP = 1;
         }
         else
         {
             LED1 = 1;
-            BEEP = 1;
+            BEEP = 0;
         }
     }
 }

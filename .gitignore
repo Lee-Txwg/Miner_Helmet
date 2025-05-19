@@ -35,3 +35,7 @@ JLinkLog.txt
 #VSCode
 c_cpp_properties.json
 keil-assistant.log04_Software/00_Ref/…/MDK5.26安装包(2032版).zip
+
+#ignore path
+/04_Software/00_Ref/ESP-WIFI/
+
