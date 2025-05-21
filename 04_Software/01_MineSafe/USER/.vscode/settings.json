@@ -7,6 +7,7 @@
         "usart.h": "c",
         "delay.h": "c",
         "stdio.h": "c",
-        "esp8266.h": "c"
+        "esp8266.h": "c",
+        "sys.h": "c"
     }
 }
