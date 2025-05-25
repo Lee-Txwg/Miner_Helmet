@@ -41,7 +41,7 @@
 #include "led.h"
 #include "beep.h"
 
-#define PROID "huaqing_smarthome"
+#define PROID "chan"
 
 #define AUTH_INFO "huaqing_smarthome_zui_jiandan"
 

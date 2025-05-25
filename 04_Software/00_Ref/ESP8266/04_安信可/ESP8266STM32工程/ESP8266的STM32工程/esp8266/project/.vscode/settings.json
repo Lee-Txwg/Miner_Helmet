@@ -1,0 +1,6 @@
+{
+    "files.associations": {
+        "mqtt.h": "c",
+        "esp8266.h": "c"
+    }
+}

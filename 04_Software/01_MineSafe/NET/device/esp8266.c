@@ -39,6 +39,9 @@
 #define SERVER_HOST						"broker.emqx.io"			//	MQTT������������IP
 #define SERVER_PORT						"1883"								//	MQTT�������˿ڣ�һ��Ϊ1883���øģ�
 
+// #define SERVER_HOST						"139.155.114.242"			//	MQTT������������IP
+// #define SERVER_PORT						"1883"								//	MQTT�������˿ڣ�һ��Ϊ1883���øģ�
+
 
 #define ESP8266_WIFI_INFO			"AT+CWJAP=\"" WIFI_SSID "\",\"" WIFI_PSWD "\"\r\n"
 #define ESP8266_ONENET_INFO		"AT+CIPSTART=\"TCP\",\"" SERVER_HOST "\"," SERVER_PORT "\r\n"
