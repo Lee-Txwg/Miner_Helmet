@@ -28,5 +28,6 @@ void BEEP_Init(void)
  GPIO_InitStructure.GPIO_Pin = GPIO_Pin_9;			
  GPIO_Init(GPIOB, &GPIO_InitStructure);		
  GPIO_ResetBits(GPIOB,GPIO_Pin_9);
+//BEEP_remote = 1;
 }
  

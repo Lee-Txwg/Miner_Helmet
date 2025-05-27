@@ -53,18 +53,16 @@ int main(void)
     /*----------------- 2. System Initialization -----------------*/
     /*--> [2.1] Hardware Init */
     HW_Init();
-    GPIO_PWM_Init();
-    GPIO_EXTI_Init();
-
     /* ===================intercom==================== */
     GPIO_Init_intercom();
     Intercom_GPIO_EXTI_Init();
-    //GPIO_SetPB3High();
-    // while(1)
-    // {
-    //     PrintPB3State();
-    //     //printf("The external interrupt of PB3 has been initialized");
-    // }
+		
+		/* =================== PWM ===================== */
+    GPIO_PWM_Init();
+    GPIO_EXTI_Init();
+	
+
+
 
     /*--> [2.2] Network Init */
     Net_Init();
