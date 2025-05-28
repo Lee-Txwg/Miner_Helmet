@@ -1,0 +1,6 @@
+Added Pin To Net: NetName=GND Pin=J1-1
+Added Pin To Net: NetName=PB9 Pin=J1-2
+Added Pin To Net: NetName=VCC Pin=J1-3
+Added Pin To Net: NetName=GND Pin=J2-1
+Added Pin To Net: NetName=PA0 Pin=J2-2
+Added Pin To Net: NetName=VCC Pin=J2-3

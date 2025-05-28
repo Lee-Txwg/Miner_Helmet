@@ -1,0 +1,38 @@
+Change Component Designator: OldDesignator=J3 NewDesignator=J4
+Change Component Designator: OldDesignator=R7 NewDesignator=R8
+Change Component Designator: OldDesignator=R8 NewDesignator=R9
+Added Component: Designator=J3(HDR-M-2.54_1X2)
+Add component (AddParameter): Name = "Add into BOM"; Value = "yes"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Contributor"; Value = "LCEDA_Lib"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Convert to PCB"; Value = "yes"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Device"; Value = "HDR-M-2.54_1x2"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer Part"; Value = ""; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Origin Footprint"; Value = "HDR-M-2.54_1X2"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "spicePre"; Value = "J"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "spiceSymbolName"; Value = "HDR-M-2.54_1x2"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "LCSC"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier Part"; Value = "C124375"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Symbol"; Value = "HDR-M-2.54_1x2"; VariantName = "[No Variations]"
+Added Component: Designator=R7(R0603)
+Add component (AddParameter): Name = "Add into BOM"; Value = "yes"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Convert to PCB"; Value = "yes"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Device"; Value = "510¦¸"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "JLCPCB Part Class"; Value = "Basic Part"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer"; Value = "UniOhm"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Manufacturer Part"; Value = "0603WAF5100T5E"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "nameAlias"; Value = "Resistance"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Origin Footprint"; Value = "R0603"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Resistance"; Value = "510"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "spicePre"; Value = "R"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "spiceSymbolName"; Value = "0603WAF5100T5E"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier"; Value = "LCSC"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Supplier Part"; Value = "C23193"; VariantName = "[No Variations]"
+Add component (AddParameter): Name = "Symbol"; Value = "510¦¸"; VariantName = "[No Variations]"
+Added Pin To Net: NetName=GND Pin=J3-2
+Added Pin To Net: NetName=VCC Pin=R7-1
+Added Pin To Net: NetName=NetJ3_1 Pin=J3-1
+Added Pin To Net: NetName=NetJ3_1 Pin=R7-2
+Added Net: Name=NetJ3_1
+Added Member To Class: ClassName=MineSafe Member=Component J4 Debugging port
+Added Member To Class: ClassName=MineSafe Member=Component R9 5.1k¦¸

@@ -1,6 +1,0 @@
-Add Pin To Net: Pin=J1-1 Old Net=NetJ1_1 New Net=GND
-Add Pin To Net: Pin=J1-2 Old Net=NetJ1_2 New Net=PB9
-Add Pin To Net: Pin=J1-3 Old Net=NetJ1_3 New Net=VCC
-Add Pin To Net: Pin=J2-1 Old Net=NetJ2_1 New Net=GND
-Add Pin To Net: Pin=J2-2 Old Net=NetJ2_2 New Net=PA0
-Add Pin To Net: Pin=J2-3 Old Net=NetJ2_3 New Net=VCC
