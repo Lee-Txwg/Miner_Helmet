@@ -1,0 +1,13 @@
+Output: NC Drill Files
+Type  : NC Drill
+From  : Project [MineSafe.PrjPcb]
+   Generated File[MineSafe-RoundHoles.TXT]
+   Generated File[MineSafe-SlotHoles.TXT]
+   Generated File[MineSafe.LDP]
+   Generated File[MineSafe.DRR]
+
+
+Files Generated   : 4
+Documents Printed : 0
+
+Finished Output Generation At 0:49:33 On 2025/5/20,ÐÇÆÚ¶þ

@@ -1,8 +1,0 @@
-Added Component: Designator=U2(0.96OLED_4P)
-Add component (AddParameter): Name = "Add into BOM"; Value = "yes"; VariantName = "[No Variations]"
-Add component (AddParameter): Name = "Channel ID"; Value = ""; VariantName = "[No Variations]"
-Add component (AddParameter): Name = "Convert to PCB"; Value = "yes"; VariantName = "[No Variations]"
-Add component (AddParameter): Name = "Device"; Value = "0.96OLED"; VariantName = "[No Variations]"
-Add component (AddParameter): Name = "Group ID"; Value = ""; VariantName = "[No Variations]"
-Add component (AddParameter): Name = "Reuse Block"; Value = ""; VariantName = "[No Variations]"
-Add component (AddParameter): Name = "Symbol"; Value = "0.96OLED"; VariantName = "[No Variations]"
