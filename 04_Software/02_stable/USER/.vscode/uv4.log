@@ -1,0 +1,16 @@
+Load "..\\OBJ\\MineSafe.axf" 
+Set JLink Project File to "c:\Users\50572\Desktop\MineSafe\04_Software\02_stable\USER\JLinkSettings.ini"* JLink Info: Device "STM32F103C8" selected.
+
+JLink info:
+------------
+DLL: V6.98 , compiled Mar  2 2021 15:48:59
+Firmware: J-Link OB-Mini Plus-CortexM compiled Mar  8 2099 11:15:54
+Hardware: V1.00
+S/N : 63728791 
+Feature(s) : GDB, RDI, FlashBP, FlashDL, JFlash 
+
+* JLink Info: STM32 (connect): Can not attach to CPU. Trying connect under reset.
+* JLink Info: STM32 (connect): Can not attach to CPU. Trying connect under reset.
+***JLink Error: STM32: Connecting to CPU via connect under reset failed.
+Error: Flash Download failed  -  Target DLL has been cancelled
+Flash Load finished at 12:26:01
