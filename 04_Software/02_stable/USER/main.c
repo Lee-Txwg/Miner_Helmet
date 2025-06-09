@@ -19,7 +19,7 @@ extern nmea_msg gpsx;
 uint8_t key = 0XFF;
 
 // Global threshold variables with default values
-volatile u8 temperatureThreshold = 40; // Default: 30°C
+volatile u8 temperatureThreshold = 35; // Default: 30°C
 volatile u8 humidityThreshold = 80;    // Default: 80%
 volatile float smokeThreshold = 2000;  // Default: 50 (example value)
 
